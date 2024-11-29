@@ -1,0 +1,16 @@
+Capa de interfaz gráfica.  
+Esta carpeta es para los componentes reutilizables que no 
+    corresponden a una página en sí, sino a partes de la 
+    interfaz que se pueden utilizar en varias páginas o
+    secciones de la aplicación.
+
+Ejemplo:
+Header.js
+Footer.js
+ContactForm.js
+Dashboard.js
+
+Idealemente usar subdirectorios, por ejemplo para el header, carpeta 'header' que almacena Header.js y su diseño Header.css
+
+Esta capa debe 'contactarse' con la capa Lógica de negocio para obtener datos (Lógica de negocio se 'conecta' a la base de datos)
+Dashboard.js contiene ejemplo de cómo invoca el servicio.

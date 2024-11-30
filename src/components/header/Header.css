@@ -1,0 +1,92 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: black;
+    color: white;
+    text-align: center;
+    font-size: 20px;
+    padding: 5px 20px;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    width: 20%;
+    
+}
+
+.header-logo {
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+}
+
+.header-title {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.header-button {
+    display: flex;
+    align-items: center;
+    width: auto;
+
+}
+
+.menu-button {
+    background-color: transparent;
+    border: 1px solid white;
+    color: white;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.menu-button:hover {
+    background-color: white;
+    color: black;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .header {
+        font-size: 18px;
+        padding: 10px;
+    }
+
+    .header-logo {
+        width: 40px;
+        height: 40px;
+    }
+
+    .header-title {
+        font-size: 20px;
+    }
+
+    .menu-button {
+        font-size: 14px;
+        padding: 5px 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .header-left, .header-right {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .header-title {
+        font-size: 18px;
+    }
+
+    .menu-button {
+        font-size: 12px;
+        padding: 5px 6px;
+    }
+}

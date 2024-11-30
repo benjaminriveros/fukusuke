@@ -1,0 +1,28 @@
+.content{
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background-color: gray;
+    color: black;
+}
+
+.home-page__header{
+    color:black;
+    background-color: black;
+    width: 100%;
+}
+
+.home-page__text{
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    color: white;
+    position: static;
+    top: 0;
+    left: 0;
+    width: 20%;
+    margin: 10px 20px
+}
+
+
+

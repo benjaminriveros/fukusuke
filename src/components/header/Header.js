@@ -10,16 +10,16 @@ const Header = () => {
                 <h1 className="header-title">Fukusuke</h1>
             </div>
             <div className="header-button">
-                <button className="menu-button">Menu</button>
+                <button className="menu-button">Inicio</button>
             </div>
             <div className="header-button">
                 <button className="menu-button">Menu</button>
             </div>
             <div className="header-button">
-                <button className="menu-button">Menu</button>
+                <button className="menu-button">Contacto</button>
             </div>
             <div className="header-button">
-                <button className="menu-button">Menu</button>
+                <button className="menu-button">Registro/Login</button>
             </div>
         </header>
     );

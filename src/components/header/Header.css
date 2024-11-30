@@ -5,25 +5,24 @@
     background-color: black;
     color: white;
     text-align: center;
-    font-size: 20px;
-    padding: 5px 20px;
+    font-size: 1.25rem; /* 20px */
+    padding: 0.3125rem 1.25rem; /* 5px 20px */
 }
 
 .header-left {
     display: flex;
     align-items: center;
     width: 20%;
-    
 }
 
 .header-logo {
-    width: 50px;
-    height: 50px;
-    margin-right: 10px;
+    width: 3.125rem; /* 50px */
+    height: 3.125rem; /* 50px */
+    margin-right: 0.625rem; /* 10px */
 }
 
 .header-title {
-    font-size: 24px;
+    font-size: 1.5rem; /* 24px */
     font-weight: bold;
 }
 
@@ -31,16 +30,15 @@
     display: flex;
     align-items: center;
     width: auto;
-
 }
 
 .menu-button {
     background-color: transparent;
     border: 1px solid white;
     color: white;
-    padding: 5px 10px;
+    padding: 0.3125rem 0.625rem; /* 5px 10px */
     cursor: pointer;
-    font-size: 16px;
+    font-size: 1rem; /* 16px */
 }
 
 .menu-button:hover {
@@ -51,22 +49,22 @@
 /* Responsive styles */
 @media (max-width: 768px) {
     .header {
-        font-size: 18px;
-        padding: 10px;
+        font-size: 1.125rem; /* 18px */
+        padding: 0.625rem; /* 10px */
     }
 
     .header-logo {
-        width: 40px;
-        height: 40px;
+        width: 2.5rem; /* 40px */
+        height: 2.5rem; /* 40px */
     }
 
     .header-title {
-        font-size: 20px;
+        font-size: 1.25rem; /* 20px */
     }
 
     .menu-button {
-        font-size: 14px;
-        padding: 5px 8px;
+        font-size: 0.875rem; /* 14px */
+        padding: 0.3125rem 0.5rem; /* 5px 8px */
     }
 }
 
@@ -82,11 +80,11 @@
     }
 
     .header-title {
-        font-size: 18px;
+        font-size: 1.125rem; /* 18px */
     }
 
     .menu-button {
-        font-size: 12px;
-        padding: 5px 6px;
+        font-size: 0.75rem; /* 12px */
+        padding: 0.3125rem 0.375rem; /* 5px 6px */
     }
 }

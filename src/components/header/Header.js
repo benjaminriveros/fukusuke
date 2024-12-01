@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Header.css'; // Make sure to create a CSS file for styling
 import Fukusuke from '../../assets/fukusuke.png';
 import { validatePassword, validateRut, validatePhoneNumber } from '../../functions/LoginRules';
+import { jwtDecode } from 'jwt-decode';
 
 const Header = () => {
     const genderOptions = [
@@ -28,6 +29,23 @@ const Header = () => {
     const [phoneError, setPhoneError] = useState('');
     const [isFormValid, setIsFormValid] = useState(true);
     const [registerSuccessMessage, setRegisterSuccessMessage] = useState('');
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+    // Manejar la autenticación
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            try {
+                const decoded = jwtDecode(token); // Decodifica el token
+                console.log('Token decodificado:', decoded); // Verifica el contenido del token
+                setUsername(decoded.name || ''); // Asegúrate de manejar un campo "name" vacío
+                setIsAuthenticated(true);
+            } catch (error) {
+                console.error('Token inválido:', error);
+                localStorage.removeItem('token');
+            }
+        }
+    }, []);
 
     const handleGenderChange = (e) => {
         setGender(e.target.value);
@@ -49,6 +67,41 @@ const Header = () => {
         setIsRegisterModalOpen(false);
     };
 
+    const handleLoginSubmit = async (e) => {
+        e.preventDefault();
+      
+        try {
+          const response = await fetch('http://localhost:3000/api/users/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password }),
+          });
+      
+          const data = await response.json();
+      
+          if (response.ok) {
+            console.log('Inicio de sesión exitoso:', data);
+            alert('Inicio de sesión exitoso');
+            // Puedes guardar el token en localStorage o manejarlo según tu lógica
+            localStorage.setItem('token', data.token);
+            window.location.reload(); // Refrescar página
+          } else {
+            console.error('Error al iniciar sesión:', data);
+            alert(`Error: ${data.message}`);
+          }
+        } catch (err) {
+          console.error('Error:', err);
+          alert('Error al procesar la solicitud.');
+        }
+      };
+
+    const handleLogout = () => {
+        localStorage.removeItem('token'); // Eliminar el token
+        setIsAuthenticated(false); // Cambiar el estado de autenticación
+        setUsername(''); // Vaciar el nombre de usuario
+        window.location.reload(); // Recargar la página
+    };
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
       
@@ -133,7 +186,18 @@ const Header = () => {
                     <button className="menu-button">🛒 Carrito</button>
                 </div>
                 <div className="header-button">
-                    <button className="menu-button" onClick={openLoginModal}>Registro/Login</button>
+                    {isAuthenticated ? (
+                        <div>
+                            <span>{username} </span>  
+                            <button className="menu-button" onClick={handleLogout}>
+                                Cerrar sesión
+                            </button>
+                        </div>
+                    ) : (
+                        <button className="menu-button" onClick={openLoginModal}>
+                            Registro/Login
+                        </button>
+                    )}
                 </div>
             </header>
 
@@ -143,12 +207,24 @@ const Header = () => {
                         <span className="close-button" onClick={closeLoginModal}>&times;</span>
                         <h2>Login</h2>
                         {registerSuccessMessage && <p style={{ color: 'green' }}>{registerSuccessMessage}</p>}
-                        <form className="login-form">
-                            <label htmlFor="username">Usuario:</label>
-                            <input type="text" id="username" name="username" required />
-                            <label htmlFor="password">Contraseña:</label>
-                            <input type="password" id="password" name="password" required />
-                            <button type="submit" className="login-button">Login</button>
+                        <form className="login-form" onSubmit={handleLoginSubmit}>
+                        <label htmlFor="login-email">Correo Electrónico:</label>
+                        <input
+                            type="email"
+                            id="login-email"
+                            name="login-email"
+                            required
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
+                        <label htmlFor="login-password">Contraseña:</label>
+                        <input
+                            type="password"
+                            id="login-password"
+                            name="login-password"
+                            required
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
+                        <button type="submit" className="login-button">Login</button>
                         </form>
                         <p>No tienes un usuario? <a href="#" onClick={() => { closeLoginModal(); openRegisterModal(); }}>Registrate</a></p>
                     </div>

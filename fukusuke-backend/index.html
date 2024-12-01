@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prueba de API</title>
+</head>
+<body>
+  <h1>Prueba de API</h1>
+
+  <!-- Formulario de Registro -->
+  <h2>Registro</h2>
+  <form id="registerForm">
+    <input type="text" id="regName" placeholder="Nombre" required>
+    <input type="email" id="regEmail" placeholder="Correo Electrónico" required>
+    <input type="password" id="regPassword" placeholder="Contraseña" required>
+    <select id="regRole">
+      <option value="cliente">Cliente</option>
+      <option value="administrador">Administrador</option>
+      <option value="cajero">Cajero</option>
+      <option value="despachador">Despachador</option>
+    </select>
+    <button type="submit">Registrar</button>
+  </form>
+  <div id="registerResponse"></div>
+
+  <!-- Formulario de Inicio de Sesión -->
+  <h2>Inicio de Sesión</h2>
+  <form id="loginForm">
+    <input type="email" id="loginEmail" placeholder="Correo Electrónico" required>
+    <input type="password" id="loginPassword" placeholder="Contraseña" required>
+    <button type="submit">Iniciar Sesión</button>
+  </form>
+  <div id="loginResponse"></div>
+
+  <script>
+    // Función para registrar un usuario
+    document.getElementById('registerForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('regName').value;
+      const email = document.getElementById('regEmail').value;
+      const password = document.getElementById('regPassword').value;
+      const role = document.getElementById('regRole').value;
+
+      try {
+        const response = await fetch('http://localhost:3000/api/users/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, password, role }),
+        });
+
+        const data = await response.json();
+        document.getElementById('registerResponse').innerText = JSON.stringify(data, null, 2);
+      } catch (err) {
+        document.getElementById('registerResponse').innerText = 'Error en el registro';
+      }
+    });
+
+    // Función para iniciar sesión
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+
+      try {
+        const response = await fetch('http://localhost:3000/api/users/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password }),
+        });
+
+        const data = await response.json();
+        document.getElementById('loginResponse').innerText = JSON.stringify(data, null, 2);
+      } catch (err) {
+        document.getElementById('loginResponse').innerText = 'Error al iniciar sesión';
+      }
+    });
+  </script>
+</body>
+</html>

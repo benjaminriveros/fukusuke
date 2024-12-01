@@ -49,7 +49,7 @@ const Header = () => {
         setIsRegisterModalOpen(false);
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         let isValid = true;
@@ -91,6 +91,39 @@ const Header = () => {
                 nacimiento,
                 gender,
             });
+            const selectedItems = [];
+            selectedItems.push({
+                name: parseInt(id_bloque, 10),
+                email: hour,
+                password: classType,
+                role: 'cliente',
+            })
+
+            const data = selectedItems;
+            console.log('Data to be sent:', data); // Log the data to verify its structure
+
+            try {
+                const response = await fetch(
+                  `http://localhost/api/users/register`,
+                  {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                  }
+                );
+          
+                if (response.ok) {
+                    console.log('Data submitted successfully');
+                    window.location.reload(); // Refresh the page
+                } else {
+                    console.error('Fallo al enviar datos:', response);
+                }
+                }   catch (error) {
+                    console.error('Error:', error);
+                }
+
 
             // Set success message and open login modal
             setRegisterSuccessMessage('Registro completo!');
@@ -100,6 +133,7 @@ const Header = () => {
             console.log('Form is invalid');
         }
     };
+
 
     return (
         <>

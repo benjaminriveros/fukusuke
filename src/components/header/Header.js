@@ -104,7 +104,7 @@ const Header = () => {
 
             try {
                 const response = await fetch(
-                  `http://localhost/api/users/register`,
+                  `http://localhost:3000/api/users/register`,
                   {
                     method: 'POST',
                     headers: {

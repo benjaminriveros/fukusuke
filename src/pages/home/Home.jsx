@@ -96,10 +96,15 @@ export const HomePage = () => {
         <h2>Nuestras promos favoritas</h2>
         <div className="promos-container">
           {promos.map((promo) => (
-            <div key={promo.id} className="promo-item" onClick={() => openModal(promo)}>
+            <div key={promo.id} className="promo-item" >
+              <div className="promoCart" onClick={() => openModal(promo)}>
               <img src={promo.image} alt={promo.name} className="promo-image" />
               <h3>{promo.name}</h3>
               <p>${promo.price.toLocaleString()}</p>
+              </div>
+              <button className="add-to-cart" onClick={() => addToCart(promo)}>
+                Añadir al carrito
+              </button>
             </div>
           ))}
         </div>

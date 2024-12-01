@@ -51,88 +51,69 @@ const Header = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+      
         let isValid = true;
-
+      
         if (!validatePassword(password)) {
-            setPasswordError('Contraseña debe tener al menos 8 caracteres, una letra mayúscula, una letra minúscula y un número.');
-            isValid = false;
+          setPasswordError('Contraseña debe tener al menos 8 caracteres, una letra mayúscula, una letra minúscula y un número.');
+          isValid = false;
         } else {
-            setPasswordError('');
+          setPasswordError('');
         }
-
+      
         if (!validateRut(rut)) {
-            setRutError('RUT debe ser en formato 12345678-9.');
-            isValid = false;
+          setRutError('RUT debe ser en formato 12345678-9.');
+          isValid = false;
         } else {
-            setRutError('');
+          setRutError('');
         }
-
+      
         if (!validatePhoneNumber(telefono)) {
-            setPhoneError('Numero de telefono debe ser de 9 digitos.');
-            isValid = false;
+          setPhoneError('Número de teléfono debe ser de 9 dígitos.');
+          isValid = false;
         } else {
-            setPhoneError('');
+          setPhoneError('');
         }
-
+      
         setIsFormValid(isValid);
-
+      
         if (isValid) {
-            // Access form values here
-            console.log('Form submitted with values:', {
-                username,
-                rut,
-                password,
-                direccion,
-                region,
-                comuna,
-                telefono,
-                email,
-                nacimiento,
-                gender,
+          const data = {
+            name: username,
+            email: email,
+            password: password,
+            role: 'cliente',
+          };
+      
+          console.log('Data to be sent:', data); // Verificar estructura de los datos
+      
+          try {
+            const response = await fetch('http://localhost:3000/api/users/register', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(data),
             });
-            const selectedItems = [];
-            selectedItems.push({
-                name: parseInt(id_bloque, 10),
-                email: hour,
-                password: classType,
-                role: 'cliente',
-            })
-
-            const data = selectedItems;
-            console.log('Data to be sent:', data); // Log the data to verify its structure
-
-            try {
-                const response = await fetch(
-                  `http://localhost:3000/api/users/register`,
-                  {
-                    method: 'POST',
-                    headers: {
-                      'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data),
-                  }
-                );
-          
-                if (response.ok) {
-                    console.log('Data submitted successfully');
-                    window.location.reload(); // Refresh the page
-                } else {
-                    console.error('Fallo al enviar datos:', response);
-                }
-                }   catch (error) {
-                    console.error('Error:', error);
-                }
-
-
-            // Set success message and open login modal
-            setRegisterSuccessMessage('Registro completo!');
-            closeRegisterModal();
-            openLoginModal();
+      
+            if (response.ok) {
+              console.log('Data submitted successfully');
+              window.location.reload(); // Refrescar la página
+            } else {
+              const errorData = await response.json();
+              console.error('Fallo al enviar datos:', errorData);
+            }
+          } catch (error) {
+            console.error('Error:', error);
+          }
+      
+          setRegisterSuccessMessage('Registro completo!');
+          closeRegisterModal();
+          openLoginModal();
         } else {
-            console.log('Form is invalid');
+          console.log('Formulario inválido');
         }
-    };
+      };
 
 
     return (

@@ -1,6 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sushi from '../../assets/sushi.jpg';
+import Ebi from '../../assets/Ebi-Keto-Oriental.png';
+import Almond from '../../assets/Almond-Oriental.png';
+import Avocado from '../../assets/Avocado-Furai-Oriental.png';
+import Sabi from '../../assets/Sabi-Oriental.png';
+import promo30 from '../../assets/Promo-30.png';
+import promo50 from '../../assets/Promo-50-frito.png';
 import './Home.css';
 
 export const HomePage = () => {
@@ -13,25 +19,25 @@ export const HomePage = () => {
       name: "Ebi Keto Oriental",
       price: 7200,
       oldPrice: 14400,
-      image: "https://via.placeholder.com/300x300",
+      image: Ebi,
     },
     {
       name: "Almond Oriental",
       price: 6000,
       oldPrice: 12000,
-      image: "https://via.placeholder.com/300x300",
+      image: Almond,
     },
     {
       name: "Sabi Oriental",
       price: 7400,
       oldPrice: 14800,
-      image: "https://via.placeholder.com/300x300",
+      image: Sabi,
     },
     {
       name: "Avocado Furai Oriental",
       price: 7200,
       oldPrice: 14400,
-      image: "https://via.placeholder.com/300x300",
+      image: Avocado,
     },
   ];
 
@@ -45,7 +51,7 @@ export const HomePage = () => {
         "Atún, palta, queso, envuelto en ciboulette.",
       ],
       price: 14990,
-      image: "https://via.placeholder.com/300x200",
+      image: promo30,
     },
     {
       id: 2,
@@ -55,7 +61,7 @@ export const HomePage = () => {
         "Queso, cebollín, camarón, frito en panko.",
       ],
       price: 16990,
-      image: "https://via.placeholder.com/300x200",
+      image: promo50,
     },
   ];
 

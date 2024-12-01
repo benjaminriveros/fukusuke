@@ -52,7 +52,7 @@ const Header = () => {
                     <button className="menu-button">Menu</button>
                 </div>
                 <div className="header-button">
-                    <button className="menu-button">Contacto</button>
+                    <button className="menu-button">🛒 Carrito</button>
                 </div>
                 <div className="header-button">
                     <button className="menu-button" onClick={openLoginModal}>Registro/Login</button>

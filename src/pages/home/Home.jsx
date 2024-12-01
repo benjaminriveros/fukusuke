@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sushi from '../../assets/sushi.jpg';
 import Ebi from '../../assets/Ebi-Keto-Oriental.png';
@@ -8,6 +8,7 @@ import Sabi from '../../assets/Sabi-Oriental.png';
 import promo30 from '../../assets/Promo-30.png';
 import promo50 from '../../assets/Promo-50-frito.png';
 import './Home.css';
+import { CartContext } from "../../pages/Carrito/Carrito.jsx";
 
 export const HomePage = () => {
   // Estado para el modal
@@ -64,7 +65,7 @@ export const HomePage = () => {
       image: promo50,
     },
   ];
-
+  const { addToCart } = useContext(CartContext); // Acceso al contexto
   const navigate = useNavigate();
 
   // Funciones para el modal
@@ -78,9 +79,7 @@ export const HomePage = () => {
     setSelectedPromo(null);
   };
 
-  const addToCart = (item) => {
-    alert(`Añadido al carrito: ${item.name}`);
-  };
+
 
   return (
     <>

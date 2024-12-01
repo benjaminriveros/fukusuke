@@ -1,6 +1,7 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import './Header.css'; // Make sure to create a CSS file for styling
 import Fukusuke from '../../assets/fukusuke.png';
+import { CartContext } from "../../pages/Carrito/Carrito.jsx";
 
 const Header = () => {
 
@@ -38,6 +39,12 @@ const Header = () => {
         setIsRegisterModalOpen(false);
     };
 
+    const { cartItems } = useContext(CartContext); // Acceso al carrito
+    const [isCartOpen, setIsCartOpen] = useState(false);
+
+    const openCart = () => setIsCartOpen(true);
+    const closeCart = () => setIsCartOpen(false);
+
     return (
         <>
             <header className="header">
@@ -47,14 +54,8 @@ const Header = () => {
                 </div>
                 <div className="header-button">
                     <button className="menu-button">Inicio</button>
-                </div>
-                <div className="header-button">
                     <button className="menu-button">Menu</button>
-                </div>
-                <div className="header-button">
-                    <button className="menu-button">🛒 Carrito</button>
-                </div>
-                <div className="header-button">
+                    <button className="menu-button" onClick={openCart}>🛒 Carrito ({cartItems.length})</button>
                     <button className="menu-button" onClick={openLoginModal}>Registro/Login</button>
                 </div>
             </header>
@@ -117,6 +118,37 @@ const Header = () => {
                     </div>
                 </div>
             )}
+
+            {isCartOpen && (
+                    <div className="modal">
+                    <div className="modal-content">
+                        <span className="close-button" onClick={closeCart}>
+                        &times;
+                        </span>
+                        <h2>Carrito de Compras</h2>
+                        {cartItems.length === 0 ? (
+                        <p>El carrito está vacío.</p>
+                        ) : (
+                        <ul className="cart-items">
+                            {cartItems.map((item, index) => (
+                            <li key={index} className="cart-item">
+                                <span>{item.name}</span>
+                                <span>${item.price.toLocaleString()}</span>
+                            </li>
+                            ))}
+                        </ul>
+                        )}
+                        {cartItems.length > 0 && (
+                        <div className="cart-total">
+                            <h3>
+                            Total: $
+                            {cartItems.reduce((total, item) => total + item.price, 0).toLocaleString()}
+                            </h3>
+                        </div>
+                        )}
+                    </div>
+                </div>
+                )}
         </>
     );
 };

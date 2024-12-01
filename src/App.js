@@ -10,16 +10,19 @@ import Header from './components/header/Header';
 
 import Home from './pages/home/Home';
 
+import { CartProvider } from "./pages/Carrito/Carrito";
+
 
 function App() {
   return (
-
-    <Router>
-      <Header />
+    <CartProvider>
+      <Router>
+        <Header />
         <Routes>
-          <Route path='/' element={<Home />} />
+          <Route path="/" element={<Home />} />
         </Routes>
-    </Router>
+      </Router>
+    </CartProvider>
 
   );
 }

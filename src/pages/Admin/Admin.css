@@ -308,20 +308,3 @@ table td button.delete:hover {
     color: black;
     border: 1px solid black;
 }
-
-.btn-prd{
-  background-color: #7d832f;
-  color: white;
-  margin-left: 25px;
-}
-.btn-prd-e{
-  background-color: #a82e2e;
-  color: white;
-  margin-left: 5px;
-}
-.btn-prd:hover{
-  background-color: #585c21;
-}
-.btn-prd-e:hover{
-  background-color: #691c1c;
-}

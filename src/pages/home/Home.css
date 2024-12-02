@@ -22,7 +22,7 @@
 }
 .content-a .overlay-text {
     position: absolute;
-    top: 20%;
+    top: 2%;
     left: 50%;
     transform: translate(-50%, -50%);
     color: white;
@@ -124,7 +124,7 @@
     flex-direction: column;
     align-items: center;
     width: 300px;
-    background-color: white;
+    background-color: #222;
     border-radius: 10px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
     overflow: hidden;
@@ -144,10 +144,12 @@
   
   .promo-info {
     padding: 15px;
+    color: black;
     text-align: center;
   }
   
   .promo-info h3 {
+    color: black;
     font-size: 1.2rem;
     margin-bottom: 5px;
   }

@@ -205,8 +205,8 @@ export const Admin = () => {
                     )}
                   </td>
                   <td>
-                    <button onClick={() => handleProductEdit(product)}>Editar</button>
-                    <button onClick={() => handleProductDelete(product.id)}>Eliminar</button>
+                    <button className='btn-prd' onClick={() => handleProductEdit(product)}>Editar</button>
+                    <button className='btn-prd-e' onClick={() => handleProductDelete(product.id)}>Eliminar</button>
                   </td>
                 </tr>
               ))

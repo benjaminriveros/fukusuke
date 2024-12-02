@@ -30,7 +30,7 @@ body {
 .admin-container h2 {
   font-size: 1.5rem;
   margin-bottom: 10px;
-  color: #444;
+  color: #fffcfc;
   text-align: left;
 }
 
@@ -41,7 +41,8 @@ form {
   margin-bottom: 20px;
   flex-wrap: wrap;
   justify-content: space-between;
-  background-color: white;
+  background-color: rgb(39, 39, 39);
+  color: #f1f1f1;
   padding: 15px;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -51,6 +52,8 @@ form {
 form input,
 form select,
 form button {
+  color: #f1f1f1;
+  background-color: rgb(39, 39, 39);
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -60,7 +63,7 @@ form button {
 }
 
 form button {
-  background-color: #007bff;
+  background-color: #3b9456;
   color: white;
   cursor: pointer;
   transition: background-color 0.3s;
@@ -68,7 +71,7 @@ form button {
 }
 
 form button:hover {
-  background-color: #0056b3;
+  background-color: #2d693f;
 }
 
 /* Tablas */
@@ -76,14 +79,14 @@ table {
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 20px;
-  background-color: white;
+  background-color: rgb(39, 39, 39);
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 table thead {
-  background-color: #007bff;
+  background-color: rgb(39, 39, 39);
   color: white;
 }
 
@@ -99,7 +102,7 @@ table tr:last-child td {
 }
 
 table tr:hover {
-  background-color: #f1f1f1;
+  background-color: rgb(39, 39, 39);
 }
 
 table td button {
@@ -108,6 +111,25 @@ table td button {
   border-radius: 5px;
   cursor: pointer;
   font-size: 0.9rem;
+}
+.btn-prd{
+  background-color: #7d832f;
+  color: white;
+  margin-left: 25px;
+}
+.btn-prd-e{
+  background-color: #a82e2e;
+  color: white;
+  margin-left: 5px;
+}
+
+.btn-prd:hover{
+  background-color: #585c21;
+
+}
+.btn-prd-e:hover{
+  background-color: #691c1c;
+
 }
 
 table td button.edit {
@@ -200,7 +222,7 @@ table td button.delete:hover {
 }
 
 .modal-content {
-  background-color: white;
+  background-color: rgb(44, 44, 44);
   padding: 20px;
   border-radius: 10px;
   border-color: black;

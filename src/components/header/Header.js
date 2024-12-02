@@ -46,6 +46,7 @@ const Header = () => {
 
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
     const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
+    // Estados para manejar los datos del formulario de registro
     const [username, setUsername] = useState('');
     const [rut, setRut] = useState('');
     const [password, setPassword] = useState('');
@@ -56,19 +57,22 @@ const Header = () => {
     const [email, setEmail] = useState('');
     const [nacimiento, setNacimiento] = useState('');
     const [gender, setGender] = useState('');
+    // Estados para manejar errores y validación del formulario
     const [passwordError, setPasswordError] = useState('');
     const [rutError, setRutError] = useState('');
     const [phoneError, setPhoneError] = useState('');
     const [isFormValid, setIsFormValid] = useState(true);
     const [registerSuccessMessage, setRegisterSuccessMessage] = useState('');
+    // Login
     const [isAuthenticated, setIsAuthenticated] = useState(false);
+    //Carrito
     const { cartItems, increaseQuantity,decreaseQuantity,removeFromCart,confirmPurchase,cancelPurchase, } = useContext(CartContext); // Acceso al carrito
     const [isCartOpen, setIsCartOpen] = useState(false);
 
- 
-
     const openCart = () => setIsCartOpen(true);
     const closeCart = () => setIsCartOpen(false);
+ 
+
     // Manejar la autenticación
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -112,19 +116,47 @@ const Header = () => {
     const [generatedCode, setGeneratedCode] = useState(null); // Este es el código que generará la función confirmarMail()
 
     // Función que abre la ventana emergente y genera el código
-    const handleSendConfirmationCode = () => {
+    const handleSendConfirmationCode = async () => {
         // Aquí generamos el código (este paso debe invocar a tu función confirmarMail)
-        const code = enviarCodigo(email); // Suponiendo que esta función genera un código de verificación
-        setGeneratedCode(code); // Guardamos el código generado en el estado
+        const code = await enviarCodigo(email); // Generar el código (ahora es asincrónico)
+        setGeneratedCode(code); 
         setIsConfirmationModalOpen(true); // Abrimos la ventana emergente
     };
     
     // Función para manejar la verificación del código
-    const handleConfirmCode = () => {
+    const handleConfirmCode = async () => {
         if (confirmationCode === generatedCode) {
-        // Si el código es correcto, enviamos el formulario
         setIsConfirmationModalOpen(false);
-        handleSubmit(); // Llamamos a la función de envío del formulario
+
+        const data = {
+            name: username,
+            email: email,
+            password: password,
+            role: 'cliente',
+        };
+        try {
+          const response = await fetch('http://localhost:3000/api/users/register', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+          });
+    
+          if (response.ok) {
+            console.log('Data submitted successfully');
+          } else {
+            const errorData = await response.json();
+            console.error('Fallo al enviar datos:', errorData);
+          }
+        } catch (error) {
+          console.error('Error:', error);
+        }
+
+        setRegisterSuccessMessage('Registro completo!');
+        closeRegisterModal();
+        openLoginModal();
+
         } else {
         // Si el código es incorrecto, mostramos un error
         setIsInvalidCode(true);
@@ -136,6 +168,8 @@ const Header = () => {
         setIsConfirmationModalOpen(false); // Cierra la ventana emergente
         setIsInvalidCode(false); // Limpiar posibles errores
     };
+
+    //Login
     const handleLoginSubmit = async () => {
         confirmPurchase(navigate);
       
@@ -206,32 +240,12 @@ const Header = () => {
             password: password,
             role: 'cliente',
           };
-      
           console.log('Data to be sent:', data); // Verificar estructura de los datos
+          //Aquí generamos el código (este paso debe invocar a tu función confirmarMail)
+          const code = enviarCodigo(email); // Suponiendo que esta función genera un código de verificación
+          setGeneratedCode(code); // Guardamos el código generado en el estado
+          setIsConfirmationModalOpen(true); // Abrimos la ventana emergente
       
-          try {
-            const response = await fetch('http://localhost:3000/api/users/register', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify(data),
-            });
-      
-            if (response.ok) {
-              console.log('Data submitted successfully');
-              window.location.reload(); // Refrescar la página
-            } else {
-              const errorData = await response.json();
-              console.error('Fallo al enviar datos:', errorData);
-            }
-          } catch (error) {
-            console.error('Error:', error);
-          }
-      
-          setRegisterSuccessMessage('Registro completo!');
-          closeRegisterModal();
-          openLoginModal();
         } else {
           console.log('Formulario inválido');
         }
@@ -251,7 +265,7 @@ const Header = () => {
             <header className="header">
                 <div className="logo-titulo">
                     <a href="#" className="logo"><img src={Fukusuke} alt="Logo" className="header-logo" /></a>
-                    <h1 className="titulo"><a href='#'>Fukusuke</a></h1>
+                    <h1 className="titulo"><a href='/'>Fukusuke</a></h1>
                 </div>
                 <div className="header-button">
                     <button className="menu-button" onClick={goToHome}>Inicio</button>
@@ -353,7 +367,7 @@ const Header = () => {
                                 ))}
                             </select>
                             {/*--------------------------------------------------------------------*/}
-                            <button type="button" onClick={handleSendConfirmationCode} className="register-button">Enviar Código de Confirmación</button>
+                            <button type="button" onClick={handleSubmit} className="register-button">Enviar Código de Confirmación</button>
 
 
                             {!isFormValid && <p style={{ color: 'red' }}>Por favor complete todos los campos correctamente</p>}
@@ -365,20 +379,24 @@ const Header = () => {
             {isConfirmationModalOpen && (
               <div className="modal">
                 <div className="modal-content">
-                    <span className="close-button" onClick={closeConfirmationModal()}>&times;</span>
-                    <h2>Ingrese el código enviado a su correo {email}</h2>
-                    <input
+                  <span className="close-button" onClick={closeConfirmationModal} >&times;</span>
+                  <h2>Ingrese el código enviado a su correo {email}</h2>
+
+                  {/* Campo de entrada para el código */}
+                  <input
                     type="text"
-                    id="confirmation-code"
-                    placeholder="Código de confirmación"
                     value={confirmationCode}
-                    onChange={(e) => setConfirmationCode(e.target.value)}
-                    required
-                    />
-                    <button onClick={handleConfirmCode}>Verificar Código</button>
-                    {isInvalidCode && <p style={{ color: 'red' }}>Código incorrecto, por favor intente nuevamente.</p>}
+                    onChange={(e) => setConfirmationCode(e.target.value)} // Actualizar el código ingresado
+                    placeholder="Código de confirmación"
+                  />
+                  
+                  {/* Botón para confirmar el código */}
+                  <button type="button" onClick={handleConfirmCode}>Confirmar Código</button>
+
+                  {/* Mensaje de error si el código es incorrecto */}
+                  {isInvalidCode && <p style={{ color: 'red' }}>El código es incorrecto, por favor intente nuevamente.</p>}
                 </div>
-            </div>
+              </div>
             )}
 
             {isCartOpen && (

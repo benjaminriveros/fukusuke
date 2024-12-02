@@ -29,16 +29,16 @@ const Despacho = () => {
   ]
 
   // Simular la llegada de órdenes desde el backend
-  useEffect(() => {
-    // Obtener las órdenes (puedes conectar un backend aquí)
-    const fetchOrdenes = async () => {
-      const response = await fetch("/api/ordenes"); // Ajusta esta ruta a tu backend (no se comooo) 
-      const data = await response.json();
-      setOrdenes(data);
-    };
+  // useEffect(() => {
+  //   // Obtener las órdenes (puedes conectar un backend aquí)
+  //   const fetchOrdenes = async () => {
+  //     const response = await fetch("/api/ordenes"); // Ajusta esta ruta a tu backend (no se comooo) 
+  //     const data = await response.json();
+  //     setOrdenes(data);
+  //   };
 
-    fetchOrdenes();
-  }, []);
+  //   fetchOrdenes();
+  // }, []);
 
   return (
     <div className="despacho-container">

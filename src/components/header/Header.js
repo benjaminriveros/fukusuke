@@ -245,7 +245,6 @@ const Header = () => {
                 </div>
                 <div className="header-button">
                     <button className="menu-button" onClick={goToHome}>Inicio</button>
-                    <button className="menu-button" onClick={goToMenu}>Menú</button>
                     <button className="menu-button" onClick={openCart}>
                         <span className="cart-count">({cartItems.length})</span>
                         <CiShoppingCart className="cart-icon" />

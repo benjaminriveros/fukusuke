@@ -10,7 +10,7 @@ import Header from './components/header/Header';
 import Footer from "./components/Footer/Footer";
 import { CartProvider } from "./components/Carrito/Carrito";
 
-import Home from './pages/Home/Home';
+import Home from './pages/home/Home';
 import Compra from './pages/Compra/Compra';
 import Admin from './pages/Admin/Admin';
 import Despacho from "./pages/Despacho/Despacho";

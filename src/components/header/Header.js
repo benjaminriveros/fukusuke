@@ -23,21 +23,20 @@ async function enviarCodigo(correo) {
     // Esperamos la respuesta del servidor
     const result = await response.json();
 
-    // Verifica si la respuesta contiene la propiedad 'codigo'
-    if (response.ok && result.codigo) {
+    if (response.ok) {
       console.log('Código enviado:', result.codigo);  // Mostrar el código generado
-      return result.codigo;  // Retorna el código recibido desde el backend
+        return result.codigo
     } else {
-      console.error('La respuesta no contiene un código válido');
-      throw new Error('No se pudo obtener el código');
+      console.error('Error al enviar el correo:', result.error);  // Mostrar el error si no se envió
     }
   } catch (error) {
-    console.error('Error al realizar la solicitud:', error);
+    console.error('Error al realizar la solicitud:', error);  // Manejo de errores de la solicitud
   }
 }
 
 
 const Header = () => {
+    const navigate = useNavigate(); // Hook para navegar programáticamente
     const genderOptions = [
         { value: '', label: 'Seleccione un género' },
         { value: 'masculine', label: 'Masculino' },
@@ -47,6 +46,7 @@ const Header = () => {
 
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
     const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
+    // Estados para manejar los datos del formulario de registro
     const [username, setUsername] = useState('');
     const [rut, setRut] = useState('');
     const [password, setPassword] = useState('');
@@ -57,25 +57,22 @@ const Header = () => {
     const [email, setEmail] = useState('');
     const [nacimiento, setNacimiento] = useState('');
     const [gender, setGender] = useState('');
+    // Estados para manejar errores y validación del formulario
     const [passwordError, setPasswordError] = useState('');
     const [rutError, setRutError] = useState('');
     const [phoneError, setPhoneError] = useState('');
-    const [isFormValid, setIsFormValid] = useState(false);
+    const [isFormValid, setIsFormValid] = useState(true);
     const [registerSuccessMessage, setRegisterSuccessMessage] = useState('');
+    // Login
     const [isAuthenticated, setIsAuthenticated] = useState(false);
+    //Carrito
     const { cartItems, increaseQuantity,decreaseQuantity,removeFromCart,confirmPurchase,cancelPurchase, } = useContext(CartContext); // Acceso al carrito
     const [isCartOpen, setIsCartOpen] = useState(false);
-    const [isFormValid2, setIsFormValid2] = useState(false);
-
-    const validateForm2 = () => {
-      // Comprobamos si todos los campos requeridos están llenos
-      const isValid = username && rut && password && direccion && region && comuna && telefono && email && nacimiento && gender;
-      setIsFormValid2(isValid); // Actualizamos el estado isFormValid
-    };
-    
 
     const openCart = () => setIsCartOpen(true);
     const closeCart = () => setIsCartOpen(false);
+ 
+
     // Manejar la autenticación
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -117,41 +114,64 @@ const Header = () => {
     const [confirmationCode, setConfirmationCode] = useState('');
     const [isInvalidCode, setIsInvalidCode] = useState(false);
     const [generatedCode, setGeneratedCode] = useState(null); // Este es el código que generará la función confirmarMail()
-/*
+
     // Función que abre la ventana emergente y genera el código
     const handleSendConfirmationCode = async () => {
-      // Esperamos a que se obtenga el código desde el backend
-      const code = await enviarCodigo(email); // Generar el código (ahora es asincrónico)
-
-      // Guardamos el código generado en el estado
-      setGeneratedCode(code); 
-
-      // Abrimos el modal de confirmación
-      setIsConfirmationModalOpen(true); 
+        // Aquí generamos el código (este paso debe invocar a tu función confirmarMail)
+        const code = await enviarCodigo(email); // Generar el código (ahora es asincrónico)
+        setGeneratedCode(code); 
+        setIsConfirmationModalOpen(true); // Abrimos la ventana emergente
     };
-
-    const closeConfirmationModal = () => {
-      setIsConfirmationModalOpen(false); // Actualizamos el estado para cerrar el modal
-    };
-
+    
     // Función para manejar la verificación del código
-    const handleConfirmCode = () => {
-      console.log('Código generado:', generatedCode);
-      console.log('Código ingresado:', confirmationCode);
-
-      // Verificamos si el código ingresado es el mismo que el generado
-      if (String(confirmationCode) === String(generatedCode)) {
-        // Si el código es correcto, enviamos el formulario
+    const handleConfirmCode = async () => {
+        if (confirmationCode === generatedCode) {
         setIsConfirmationModalOpen(false);
-        handleSubmit(); // Llamamos a la función de envío del formulario
-      } else {
+
+        const data = {
+            name: username,
+            email: email,
+            password: password,
+            role: 'cliente',
+        };
+        try {
+          const response = await fetch('http://localhost:3000/api/users/register', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+          });
+    
+          if (response.ok) {
+            console.log('Data submitted successfully');
+          } else {
+            const errorData = await response.json();
+            console.error('Fallo al enviar datos:', errorData);
+          }
+        } catch (error) {
+          console.error('Error:', error);
+        }
+
+        setRegisterSuccessMessage('Registro completo!');
+        closeRegisterModal();
+        openLoginModal();
+
+        } else {
         // Si el código es incorrecto, mostramos un error
         setIsInvalidCode(true);
-      }
-    };*/
+        }
+    };
     
-    const handleLoginSubmit = async (e) => {
-        e.preventDefault();
+    // Función para cerrar la ventana emergente
+    const closeConfirmationModal = () => {
+        setIsConfirmationModalOpen(false); // Cierra la ventana emergente
+        setIsInvalidCode(false); // Limpiar posibles errores
+    };
+
+    //Login
+    const handleLoginSubmit = async () => {
+        confirmPurchase(navigate);
       
         try {
           const response = await fetch('http://localhost:3000/api/users/login', {
@@ -185,100 +205,67 @@ const Header = () => {
         window.location.reload(); // Recargar la página
     };
     
-    const handleSubmit = async () => {
-      let isValid = true;
-    
-      // Realiza las validaciones sin depender de e.preventDefault()
-      if (!validatePassword(password)) {
-        setPasswordError('Contraseña debe tener al menos 8 caracteres, una letra mayúscula, una letra minúscula y un número.');
-        isValid = false;
-      } else {
-        setPasswordError('');
-      }
-    
-      if (!validateRut(rut)) {
-        setRutError('RUT debe ser en formato 12345678-9.');
-        isValid = false;
-      } else {
-        setRutError('');
-      }
-    
-      if (!validatePhoneNumber(telefono)) {
-        setPhoneError('Número de teléfono debe ser de 9 dígitos.');
-        isValid = false;
-      } else {
-        setPhoneError('');
-      }
-    
-      setIsFormValid(isValid);
-    
-      if (isValid) {
-        const data = {
-          name: username,
-          email: email,
-          password: password,
-          role: 'cliente',
-        };
-        /* */
-        // Esperamos a que se obtenga el código desde el backend
-        const code = await enviarCodigo(email); // Generar el código (ahora es asincrónico)
-
-        // Guardamos el código generado en el estado
-        setGeneratedCode(code); 
-
-        // Abrimos el modal de confirmación
-        setIsConfirmationModalOpen(true); 
-
-        console.log('Código generado:', generatedCode);
-        console.log('Código ingresado:', confirmationCode);
-        
-        // Verificamos si el código ingresado es el mismo que el generado
-        if (String(confirmationCode) === String(generatedCode)) {
-          // Si el código es correcto, enviamos el formulario
-          setIsConfirmationModalOpen(false);
-          try {
-            const response = await fetch('http://localhost:3000/api/users/register', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify(data),
-            });
+    const handleSubmit = async (e) => {
+        e.preventDefault();
       
-            if (response.ok) {
-              console.log('Data submitted successfully');
-              setRegisterSuccessMessage('Registro completo!');
-              closeRegisterModal();
-              openLoginModal();
-            } else {
-              const errorData = await response.json();
-              console.error('Fallo al enviar datos:', errorData);
-            }
-
-          } catch (error) {
-            console.error('Error:', error);
-          }
+        let isValid = true;
+      
+        if (!validatePassword(password)) {
+          setPasswordError('Contraseña debe tener al menos 8 caracteres, una letra mayúscula, una letra minúscula y un número.');
+          isValid = false;
         } else {
-          // Si el código es incorrecto, mostramos un error
-          setIsInvalidCode(true);
+          setPasswordError('');
         }
-          console.log('Data to be sent:', data); // Verificar estructura de los datos        
-      } else {
-        console.log('Formulario inválido');
-      }
-      }
-    
-    const navigate = useNavigate(); // Hook para navegar programáticamente
-    const goToHome = () => {
-      navigate("/"); // Navega a la página de inicio
-    };
+      
+        if (!validateRut(rut)) {
+          setRutError('RUT debe ser en formato 12345678-9.');
+          isValid = false;
+        } else {
+          setRutError('');
+        }
+      
+        if (!validatePhoneNumber(telefono)) {
+          setPhoneError('Número de teléfono debe ser de 9 dígitos.');
+          isValid = false;
+        } else {
+          setPhoneError('');
+        }
+      
+        setIsFormValid(isValid);
+      
+        if (isValid) {
+          const data = {
+            name: username,
+            email: email,
+            password: password,
+            role: 'cliente',
+          };
+          console.log('Data to be sent:', data); // Verificar estructura de los datos
+          //Aquí generamos el código (este paso debe invocar a tu función confirmarMail)
+          const code = enviarCodigo(email); // Suponiendo que esta función genera un código de verificación
+          setGeneratedCode(code); // Guardamos el código generado en el estado
+          setIsConfirmationModalOpen(true); // Abrimos la ventana emergente
+      
+        } else {
+          console.log('Formulario inválido');
+        }
+      };
+      
+      const goToHome = () => {
+        navigate("/"); // Navega a la página de inicio
+      };
+      
+      const handleConfirmPurchase = () => {
+        confirmPurchase(); // Llama a la función sin parámetros
+        navigate("/compra"); // Usa navigate para redirigir
+      };
 
     return (
         <>
             <header className="header">
                 <div className="logo-titulo">
                     <a href="#" className="logo"><img src={Fukusuke} alt="Logo" className="header-logo" /></a>
-                    <h1 className="titulo"><a href='#'>Fukusuke</a></h1>
+                    <h1 className="titulo"><a href='/'>Fukusuke</a></h1>
                 </div>
                 <div className="header-button">
                     <button className="menu-button" onClick={goToHome}>Inicio</button>
@@ -366,18 +353,7 @@ const Header = () => {
                             <p style={{ color: 'red' }}>{phoneError}</p>
                             {/* Correo */}
                             <label htmlFor="new-email">Correo:</label>
-                            <input
-                              type="email"
-                              id="new-email"
-                              name="new-email"
-                              required
-                              onChange={(e) => {
-                                setUsername(e.target.value);
-                                validateForm2(); // Llamamos a la validación cada vez que cambia el campo
-                              }}
-                              placeholder="Ingresa tu correo"
-                              autoComplete="email"
-                            />
+                            <input type="email" id="new-email" name="new-email" required onChange={(e) => setEmail(e.target.value)} />
                             {/* Fecha de nacimiento */}
                             <label htmlFor="new-nacimiento">Fecha de Nacimiento:</label>
                             <input type="date" id="new-nacimiento" name="new-nacimiento" required onChange={(e) => setNacimiento(e.target.value)} />
@@ -391,20 +367,19 @@ const Header = () => {
                                 ))}
                             </select>
                             {/*--------------------------------------------------------------------*/}
-                            <button type="button" onClick={handleSubmit} className="register-button">
-                              Enviar Código de Confirmación
-                            </button>
+                            <button type="button" onClick={handleSubmit} className="register-button">Enviar Código de Confirmación</button>
+
+
                             {!isFormValid && <p style={{ color: 'red' }}>Por favor complete todos los campos correctamente</p>}
-                          </form>
-                        </div>
-                      </div>
+                        </form>
+                    </div>
+                </div>
             )}
 
-            {/* Modal de confirmación */}
             {isConfirmationModalOpen && (
               <div className="modal">
                 <div className="modal-content">
-                  <span className="close-button" >&times;</span>
+                  <span className="close-button" onClick={closeConfirmationModal} >&times;</span>
                   <h2>Ingrese el código enviado a su correo {email}</h2>
 
                   {/* Campo de entrada para el código */}
@@ -416,7 +391,7 @@ const Header = () => {
                   />
                   
                   {/* Botón para confirmar el código */}
-                  <button type="button">Confirmar Código</button>
+                  <button type="button" onClick={handleConfirmCode}>Confirmar Código</button>
 
                   {/* Mensaje de error si el código es incorrecto */}
                   {isInvalidCode && <p style={{ color: 'red' }}>El código es incorrecto, por favor intente nuevamente.</p>}
@@ -469,10 +444,10 @@ const Header = () => {
                             </div>
                             <div className="cart-actions">
                                 <button onClick={confirmPurchase} className="confirm-button">
-                                    Confirmar compra
+                                    Confirmar Carrito
                                 </button>
-                                <button onClick={cancelPurchase} className="cancel-button">
-                                    Anular compra
+                                <button onClick={() => confirmPurchase(navigate)} className="cancel-button">
+                                    Anular Carrito
                                 </button>
                             </div>
                         </>    

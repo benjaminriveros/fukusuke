@@ -2,6 +2,9 @@
 
 # dependencies
 /node_modules
+/fukusuke-backend/node_modules
+/fukusuke-backend/.env
+
 /.pnp
 .pnp.js
 
@@ -19,7 +22,6 @@
 .env.test.local
 .env.production.local
 
-fukusuke-backend/node_modules
 
 npm-debug.log*
 yarn-debug.log*

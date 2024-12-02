@@ -5,6 +5,10 @@ const productRoutes = require('./routes/productRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const saleRoutes = require('./routes/saleRoutes');
 const customerRoutes = require('./routes/customerRoutes');
+const { enviarCorreo } = require('./routes/confirmarMail');
+const sendGridMail = require('@sendgrid/mail');
+sendGridMail.setApiKey('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');
+
 
 const app = express();
 const cors = require('cors');
@@ -24,6 +28,18 @@ app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/sales', saleRoutes);
 app.use('/api/customers', customerRoutes);
+
+// Ruta para enviar el código de verificación
+app.post('/enviar-correo', async (req, res) => {
+  const { correoDestino } = req.body;  // Obtener el correo desde el cuerpo de la solicitud
+
+  try {
+    const result = await enviarCorreo(correoDestino);  // Llamar a la función de confirmarMail.js
+    res.json(result);  // Retornar el código generado y el mensaje
+  } catch (error) {
+    res.status(500).json({ error: 'No se pudo enviar el correo' });  // Manejar el error
+  }
+});
 
 // Conectar con la base de datos
 sequelize.authenticate()

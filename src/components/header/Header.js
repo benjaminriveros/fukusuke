@@ -6,7 +6,32 @@ import { CartContext } from "../../pages/Carrito/Carrito.jsx";
 import { validatePassword, validateRut, validatePhoneNumber } from '../../functions/LoginRules';
 import { CiShoppingCart } from "react-icons/ci";
 import { jwtDecode } from 'jwt-decode';
+//import confirmarMail from '../../bussinesLogic/services/confirmarMail.js'
 
+async function enviarCodigo(correo) {
+  try {
+    // Enviar una solicitud POST al backend
+    const response = await fetch('http://localhost:3000/enviar-correo', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json', // Indicamos que el cuerpo es JSON
+      },
+      body: JSON.stringify({ correoDestino: correo }) // Pasamos el correo como cuerpo de la solicitud
+    });
+
+    // Esperamos la respuesta del servidor
+    const result = await response.json();
+
+    if (response.ok) {
+      console.log('Código enviado:', result.codigo);  // Mostrar el código generado
+        return result.codigo
+    } else {
+      console.error('Error al enviar el correo:', result.error);  // Mostrar el error si no se envió
+    }
+  } catch (error) {
+    console.error('Error al realizar la solicitud:', error);  // Manejo de errores de la solicitud
+  }
+}
 
 
 const Header = () => {
@@ -76,6 +101,37 @@ const Header = () => {
         setIsRegisterModalOpen(false);
     };
 
+    {/* Función para enviar el código de confirmación */}
+    const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
+    const [confirmationCode, setConfirmationCode] = useState('');
+    const [isInvalidCode, setIsInvalidCode] = useState(false);
+    const [generatedCode, setGeneratedCode] = useState(null); // Este es el código que generará la función confirmarMail()
+
+    // Función que abre la ventana emergente y genera el código
+    const handleSendConfirmationCode = () => {
+        // Aquí generamos el código (este paso debe invocar a tu función confirmarMail)
+        const code = enviarCodigo(email); // Suponiendo que esta función genera un código de verificación
+        setGeneratedCode(code); // Guardamos el código generado en el estado
+        setIsConfirmationModalOpen(true); // Abrimos la ventana emergente
+    };
+    
+    // Función para manejar la verificación del código
+    const handleConfirmCode = () => {
+        if (confirmationCode === generatedCode) {
+        // Si el código es correcto, enviamos el formulario
+        setIsConfirmationModalOpen(false);
+        handleSubmit(); // Llamamos a la función de envío del formulario
+        } else {
+        // Si el código es incorrecto, mostramos un error
+        setIsInvalidCode(true);
+        }
+    };
+    
+    // Función para cerrar la ventana emergente
+    const closeConfirmationModal = () => {
+        setIsConfirmationModalOpen(false); // Cierra la ventana emergente
+        setIsInvalidCode(false); // Limpiar posibles errores
+    };
     const handleLoginSubmit = async (e) => {
         e.preventDefault();
       
@@ -283,12 +339,33 @@ const Header = () => {
                                     </option>
                                 ))}
                             </select>
+                            {/*--------------------------------------------------------------------*/}
+                            <button type="button" onClick={handleSendConfirmationCode} className="register-button">Enviar Código de Confirmación</button>
 
-                            <button type="submit" className="register-button">Registrate</button>
-                            {!isFormValid && <p style={{ color: 'red' }}>Porfavor complete todos los campos correctamente</p>}
+
+                            {!isFormValid && <p style={{ color: 'red' }}>Por favor complete todos los campos correctamente</p>}
                         </form>
                     </div>
                 </div>
+            )}
+
+            {isConfirmationModalOpen && (
+              <div className="modal">
+                <div className="modal-content">
+                    <span className="close-button" onClick={closeConfirmationModal()}>&times;</span>
+                    <h2>Ingrese el código enviado a su correo {email}</h2>
+                    <input
+                    type="text"
+                    id="confirmation-code"
+                    placeholder="Código de confirmación"
+                    value={confirmationCode}
+                    onChange={(e) => setConfirmationCode(e.target.value)}
+                    required
+                    />
+                    <button onClick={handleConfirmCode}>Verificar Código</button>
+                    {isInvalidCode && <p style={{ color: 'red' }}>Código incorrecto, por favor intente nuevamente.</p>}
+                </div>
+            </div>
             )}
 
             {isCartOpen && (

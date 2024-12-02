@@ -9,32 +9,6 @@ import { useNavigate } from "react-router-dom"; // Importa useNavigate
 import { AuthContext } from '../../functions/AuthContext'; // Importa el contexto de autenticación
 
 
-async function enviarCodigo(correo) {
-  try {
-    // Enviar una solicitud POST al backend
-    const response = await fetch('http://localhost:3000/enviar-correo', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json', // Indicamos que el cuerpo es JSON
-      },
-      body: JSON.stringify({ correoDestino: correo }) // Pasamos el correo como cuerpo de la solicitud
-    });
-
-    // Esperamos la respuesta del servidor
-    const result = await response.json();
-
-    if (response.ok) {
-      console.log('Código enviado:', result.codigo);  // Mostrar el código generado
-        return result.codigo
-    } else {
-      console.error('Error al enviar el correo:', result.error);  // Mostrar el error si no se envió
-    }
-  } catch (error) {
-    console.error('Error al realizar la solicitud:', error);  // Manejo de errores de la solicitud
-  }
-}
-
-
 const Header = () => {
     const navigate = useNavigate(); // Hook para navegar programáticamente
     const genderOptions = [
@@ -72,6 +46,28 @@ const Header = () => {
     const openCart = () => setIsCartOpen(true);
     const closeCart = () => setIsCartOpen(false);
 
+    const enviarCodigo = async (correo) => {
+      try {
+        const response = await fetch('http://localhost:3000/enviar-correo', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json', // Indicamos que el cuerpo es JSON
+          },
+          body: JSON.stringify({ correoDestino: correo }) // Pasamos el correo como cuerpo de la solicitud
+        });
+        const result = await response.json();
+  
+        if (response.ok) {
+          console.log('Código enviado:', result.codigo);  // Mostrar el código generado
+          return result.codigo;
+        } else {
+          console.error('Error al enviar el correo:', result.error);  // Mostrar el error si no se envió
+        }
+      } catch (error) {
+        console.error('Error al realizar la solicitud:', error);  // Manejo de errores de la solicitud
+      }
+    };
+
     const handleGenderChange = (e) => {
         setGender(e.target.value);
     };
@@ -97,14 +93,6 @@ const Header = () => {
     const [confirmationCode, setConfirmationCode] = useState('');
     const [isInvalidCode, setIsInvalidCode] = useState(false);
     const [generatedCode, setGeneratedCode] = useState(null); // Este es el código que generará la función confirmarMail()
-
-    // Función que abre la ventana emergente y genera el código
-    const handleSendConfirmationCode = async () => {
-        // Aquí generamos el código (este paso debe invocar a tu función confirmarMail)
-        const code = await enviarCodigo(email); // Generar el código (ahora es asincrónico)
-        setGeneratedCode(code); 
-        setIsConfirmationModalOpen(true); // Abrimos la ventana emergente
-    };
     
     // Función para manejar la verificación del código
     const handleConfirmCode = async () => {
@@ -225,10 +213,11 @@ const Header = () => {
           };
           console.log('Data to be sent:', data); // Verificar estructura de los datos
           //Aquí generamos el código (este paso debe invocar a tu función confirmarMail)
-          const code = enviarCodigo(email); // Suponiendo que esta función genera un código de verificación
+          const code = String(await enviarCodigo(email)); // Suponiendo que esta función genera un código de verificación
+          console.log('Código generado:', code); // Mostramos el código generado
           setGeneratedCode(code); // Guardamos el código generado en el estado
           setIsConfirmationModalOpen(true); // Abrimos la ventana emergente
-      
+
         } else {
           console.log('Formulario inválido');
         }

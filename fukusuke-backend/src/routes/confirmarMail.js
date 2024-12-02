@@ -22,7 +22,7 @@ async function enviarCorreo(correoDestino) {
   try {
     await sendGridMail.send(msg);
     console.log('Correo enviado correctamente');
-    return codigo; // Retornamos el código
+    return {codigo}; // Retornamos el código
   } catch (error) {
     console.error('Error al enviar el correo:', error.response.body);
     throw new Error('No se pudo enviar el correo');

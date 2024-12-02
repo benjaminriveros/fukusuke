@@ -347,7 +347,7 @@ const Header = () => {
                             </div>
                             <div className="cart-actions">
                                 <button onClick={handleConfirmPurchase} className="confirm-button">
-                                    Confirmar compra
+                                    Ir a comprar
                                 </button>
                                 <button onClick={cancelPurchase} className="cancel-button">
                                     Anular compra

@@ -21,9 +21,9 @@ import Menu from "./pages/Menu/Menu";
 
 function App() {
   return (
-    <AuthProvider>
-    <CartProvider>
       <Router>
+            <AuthProvider>
+            <CartProvider>
         <div id="root">
           <Header />
           <div className="main-content">
@@ -45,9 +45,9 @@ function App() {
           </div>
           <Footer />
         </div>
+        </CartProvider>
+        </AuthProvider>
       </Router>
-    </CartProvider>
-    </AuthProvider>
 
   );
 }

@@ -38,22 +38,33 @@ export const Admin = () => {
   // Crear o actualizar producto
   const handleProductSubmit = async (e) => {
     e.preventDefault();
+  
+    const token = localStorage.getItem('token'); // Obtén el token del almacenamiento local
+  
+    if (!token) {
+      alert('Por favor, inicia sesión para realizar esta acción.');
+      return;
+    }
+  
     const url = isEditing
       ? `http://localhost:3000/api/products/${editProductId}`
       : 'http://localhost:3000/api/products';
     const method = isEditing ? 'PUT' : 'POST';
-
+  
     try {
       const response = await fetch(url, {
         method,
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`, // Agrega el token al encabezado
+        },
         body: JSON.stringify(productForm),
       });
-
+  
       if (!response.ok) {
         throw new Error(`Error HTTP: ${response.status} - ${response.statusText}`);
       }
-
+  
       const result = await response.json();
       console.log(isEditing ? 'Producto actualizado:' : 'Producto creado:', result);
       alert(isEditing ? 'Producto actualizado exitosamente' : 'Producto creado exitosamente');
@@ -79,18 +90,27 @@ export const Admin = () => {
     setEditProductId(product.id);
   };
 
-  // Eliminar producto
   const handleProductDelete = async (id) => {
+    const token = localStorage.getItem('token');
+  
+    if (!token) {
+      alert('Por favor, inicia sesión para realizar esta acción.');
+      return;
+    }
+  
     if (window.confirm('¿Estás seguro de eliminar este producto?')) {
       try {
         const response = await fetch(`http://localhost:3000/api/products/${id}`, {
           method: 'DELETE',
+          headers: {
+            Authorization: `Bearer ${token}`, // Agrega el token al encabezado
+          },
         });
-
+  
         if (!response.ok) {
           throw new Error(`Error HTTP: ${response.status} - ${response.statusText}`);
         }
-
+  
         alert('Producto eliminado exitosamente');
         fetchProducts();
       } catch (err) {

@@ -1,8 +1,13 @@
-import React, { useState, useEffect } from 'react';
+
+import React, {useContext, useState, useEffect} from 'react';
 import './Header.css'; // Make sure to create a CSS file for styling
 import Fukusuke from '../../assets/fukusuke.png';
+import { CartContext } from "../../pages/Carrito/Carrito.jsx";
 import { validatePassword, validateRut, validatePhoneNumber } from '../../functions/LoginRules';
+import { CiShoppingCart } from "react-icons/ci";
 import { jwtDecode } from 'jwt-decode';
+
+
 
 const Header = () => {
     const genderOptions = [
@@ -30,7 +35,11 @@ const Header = () => {
     const [isFormValid, setIsFormValid] = useState(true);
     const [registerSuccessMessage, setRegisterSuccessMessage] = useState('');
     const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const { cartItems, increaseQuantity,decreaseQuantity,removeFromCart,confirmPurchase,cancelPurchase, } = useContext(CartContext); // Acceso al carrito
+    const [isCartOpen, setIsCartOpen] = useState(false);
 
+    const openCart = () => setIsCartOpen(true);
+    const closeCart = () => setIsCartOpen(false);
     // Manejar la autenticación
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -168,24 +177,21 @@ const Header = () => {
         }
       };
 
-
     return (
         <>
             <header className="header">
-                <div className="header-left">
-                    <img src={Fukusuke} alt="Logo" className="header-logo" />
-                    <h1 className="header-title">Fukusuke</h1>
+                <div className="logo-titulo">
+                    <a href="#" className="logo"><img src={Fukusuke} alt="Logo" className="header-logo" /></a>
+                    <h1 className="titulo"><a href='#'>Fukusuke</a></h1>
                 </div>
                 <div className="header-button">
                     <button className="menu-button">Inicio</button>
-                </div>
-                <div className="header-button">
-                    <button className="menu-button">Menu</button>
-                </div>
-                <div className="header-button">
-                    <button className="menu-button">🛒 Carrito</button>
-                </div>
-                <div className="header-button">
+                    <button className="menu-button">Menú</button>
+                    <button className="menu-button" onClick={openCart}>
+                        <span className="cart-count">({cartItems.length})</span>
+                        <CiShoppingCart className="cart-icon" />
+                    </button>
+                                    <div className="header-button">
                     {isAuthenticated ? (
                         <div>
                             <span>{username} </span>  
@@ -283,6 +289,63 @@ const Header = () => {
                     </div>
                 </div>
             )}
+
+            {isCartOpen && (
+                    <div className="modal">
+                    <div className="modal-content">
+                        <span className="close-button" onClick={closeCart}>
+                        &times;
+                        </span>
+                        <h2>Carrito de Compras</h2>
+                        {cartItems.length === 0 ? (
+                        <p>El carrito está vacío.</p>
+                        ) : (
+                        <ul className="cart-items">
+                            {cartItems.map((item, index) => (
+                            <li key={index} className="cart-item">
+                                <span>{item.name}</span>
+                                <span> 
+                                    ${item.price.toLocaleString()} x {item.quantity} = $
+                                    {(item.price * item.quantity).toLocaleString()}
+                                </span>
+                                <div className="quantity-control">
+                                    <button onClick={() => decreaseQuantity(item.name)}>-</button>
+                                    <span>{item.quantity}</span>
+                                    <button onClick={() => increaseQuantity(item.name)}>+</button>
+                                </div>
+                                <button
+                                    className="remove-button"
+                                    onClick={() => removeFromCart(item.name)}
+                                >
+                                ❌
+                                </button>
+                            </li>
+                            ))}
+                        </ul>
+                        )}
+                        {cartItems.length > 0 && (
+                            <>
+                            <div className="cart-total">
+                                <h3>
+                                    Total: $
+                                    {cartItems
+                                        .reduce((total, item) => total + item.price * item.quantity, 0)
+                                        .toLocaleString()}
+                                 </h3>
+                            </div>
+                            <div className="cart-actions">
+                                <button onClick={confirmPurchase} className="confirm-button">
+                                    Confirmar compra
+                                </button>
+                                <button onClick={cancelPurchase} className="cancel-button">
+                                    Anular compra
+                                </button>
+                            </div>
+                        </>    
+                        )}
+                    </div>
+                </div>
+                )}
         </>
     );
 };

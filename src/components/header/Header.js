@@ -5,34 +5,8 @@ import Fukusuke from '../../assets/fukusuke.png';
 import { CartContext } from "../../components/Carrito/Carrito.js";
 import { validatePassword, validateRut, validatePhoneNumber } from '../../functions/LoginRules';
 import { CiShoppingCart } from "react-icons/ci";
-import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from "react-router-dom"; // Importa useNavigate
-
-
-async function enviarCodigo(correo) {
-  try {
-    // Enviar una solicitud POST al backend
-    const response = await fetch('http://localhost:3000/enviar-correo', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json', // Indicamos que el cuerpo es JSON
-      },
-      body: JSON.stringify({ correoDestino: correo }) // Pasamos el correo como cuerpo de la solicitud
-    });
-
-    // Esperamos la respuesta del servidor
-    const result = await response.json();
-
-    if (response.ok) {
-      console.log('Código enviado:', result.codigo);  // Mostrar el código generado
-        return result.codigo
-    } else {
-      console.error('Error al enviar el correo:', result.error);  // Mostrar el error si no se envió
-    }
-  } catch (error) {
-    console.error('Error al realizar la solicitud:', error);  // Manejo de errores de la solicitud
-  }
-}
+import { AuthContext } from '../../functions/AuthContext'; // Importa el contexto de autenticación
 
 
 const Header = () => {
@@ -46,6 +20,7 @@ const Header = () => {
 
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
     const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
+    // Estados para manejar los datos del formulario de registro
     const [username, setUsername] = useState('');
     const [rut, setRut] = useState('');
     const [password, setPassword] = useState('');
@@ -56,34 +31,42 @@ const Header = () => {
     const [email, setEmail] = useState('');
     const [nacimiento, setNacimiento] = useState('');
     const [gender, setGender] = useState('');
+    // Estados para manejar errores y validación del formulario
     const [passwordError, setPasswordError] = useState('');
     const [rutError, setRutError] = useState('');
     const [phoneError, setPhoneError] = useState('');
     const [isFormValid, setIsFormValid] = useState(true);
     const [registerSuccessMessage, setRegisterSuccessMessage] = useState('');
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    // Login
+    const {isAuthenticated, setIsAuthenticated } = useContext(AuthContext);
+    //Carrito
     const { cartItems, increaseQuantity,decreaseQuantity,removeFromCart,confirmPurchase,cancelPurchase, } = useContext(CartContext); // Acceso al carrito
     const [isCartOpen, setIsCartOpen] = useState(false);
 
- 
-
     const openCart = () => setIsCartOpen(true);
     const closeCart = () => setIsCartOpen(false);
-    // Manejar la autenticación
-    useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (token) {
-            try {
-                const decoded = jwtDecode(token); // Decodifica el token
-                console.log('Token decodificado:', decoded); // Verifica el contenido del token
-                setUsername(decoded.name || ''); // Asegúrate de manejar un campo "name" vacío
-                setIsAuthenticated(true);
-            } catch (error) {
-                console.error('Token inválido:', error);
-                localStorage.removeItem('token');
-            }
+
+    const enviarCodigo = async (correo) => {
+      try {
+        const response = await fetch('http://localhost:3000/enviar-correo', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json', // Indicamos que el cuerpo es JSON
+          },
+          body: JSON.stringify({ correoDestino: correo }) // Pasamos el correo como cuerpo de la solicitud
+        });
+        const result = await response.json();
+  
+        if (response.ok) {
+          console.log('Código enviado:', result.codigo);  // Mostrar el código generado
+          return result.codigo;
+        } else {
+          console.error('Error al enviar el correo:', result.error);  // Mostrar el error si no se envió
         }
-    }, []);
+      } catch (error) {
+        console.error('Error al realizar la solicitud:', error);  // Manejo de errores de la solicitud
+      }
+    };
 
     const handleGenderChange = (e) => {
         setGender(e.target.value);
@@ -110,21 +93,41 @@ const Header = () => {
     const [confirmationCode, setConfirmationCode] = useState('');
     const [isInvalidCode, setIsInvalidCode] = useState(false);
     const [generatedCode, setGeneratedCode] = useState(null); // Este es el código que generará la función confirmarMail()
-
-    // Función que abre la ventana emergente y genera el código
-    const handleSendConfirmationCode = () => {
-        // Aquí generamos el código (este paso debe invocar a tu función confirmarMail)
-        const code = enviarCodigo(email); // Suponiendo que esta función genera un código de verificación
-        setGeneratedCode(code); // Guardamos el código generado en el estado
-        setIsConfirmationModalOpen(true); // Abrimos la ventana emergente
-    };
     
     // Función para manejar la verificación del código
-    const handleConfirmCode = () => {
+    const handleConfirmCode = async () => {
         if (confirmationCode === generatedCode) {
-        // Si el código es correcto, enviamos el formulario
         setIsConfirmationModalOpen(false);
-        handleSubmit(); // Llamamos a la función de envío del formulario
+
+        const data = {
+            name: username,
+            email: email,
+            password: password,
+            role: 'cliente',
+        };
+        try {
+          const response = await fetch('http://localhost:3000/api/users/register', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+          });
+    
+          if (response.ok) {
+            console.log('Data submitted successfully');
+          } else {
+            const errorData = await response.json();
+            console.error('Fallo al enviar datos:', errorData);
+          }
+        } catch (error) {
+          console.error('Error:', error);
+        }
+
+        setRegisterSuccessMessage('Registro completo!');
+        closeRegisterModal();
+        openLoginModal();
+
         } else {
         // Si el código es incorrecto, mostramos un error
         setIsInvalidCode(true);
@@ -136,33 +139,35 @@ const Header = () => {
         setIsConfirmationModalOpen(false); // Cierra la ventana emergente
         setIsInvalidCode(false); // Limpiar posibles errores
     };
-    const handleLoginSubmit = async () => {
-        confirmPurchase(navigate);
-      
-        try {
-          const response = await fetch('http://localhost:3000/api/users/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password }),
-          });
-      
-          const data = await response.json();
-      
-          if (response.ok) {
-            console.log('Inicio de sesión exitoso:', data);
-            alert('Inicio de sesión exitoso');
-            // Puedes guardar el token en localStorage o manejarlo según tu lógica
-            localStorage.setItem('token', data.token);
-            window.location.reload(); // Refrescar página
-          } else {
-            console.error('Error al iniciar sesión:', data);
-            alert(`Error: ${data.message}`);
-          }
-        } catch (err) {
-          console.error('Error:', err);
-          alert('Error al procesar la solicitud.');
+
+    //Login
+    const handleLoginSubmit = async (e) => {
+      e.preventDefault();
+    
+      try {
+        const response = await fetch('http://localhost:3000/api/users/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password }),
+        });
+    
+        const data = await response.json();
+    
+        if (response.ok) {
+          console.log('Inicio de sesión exitoso:', data);
+          alert('Inicio de sesión exitoso');
+          // Puedes guardar el token en localStorage o manejarlo según tu lógica
+          localStorage.setItem('token', data.token);
+          window.location.reload(); // Refrescar página
+        } else {
+          console.error('Error al iniciar sesión:', data);
+          alert(`Error: ${data.message}`);
         }
-      };
+      } catch (err) {
+        console.error('Error:', err);
+        alert('Error al procesar la solicitud.');
+      }
+    };
 
     const handleLogout = () => {
         localStorage.removeItem('token'); // Eliminar el token
@@ -206,32 +211,13 @@ const Header = () => {
             password: password,
             role: 'cliente',
           };
-      
           console.log('Data to be sent:', data); // Verificar estructura de los datos
-      
-          try {
-            const response = await fetch('http://localhost:3000/api/users/register', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify(data),
-            });
-      
-            if (response.ok) {
-              console.log('Data submitted successfully');
-              window.location.reload(); // Refrescar la página
-            } else {
-              const errorData = await response.json();
-              console.error('Fallo al enviar datos:', errorData);
-            }
-          } catch (error) {
-            console.error('Error:', error);
-          }
-      
-          setRegisterSuccessMessage('Registro completo!');
-          closeRegisterModal();
-          openLoginModal();
+          //Aquí generamos el código (este paso debe invocar a tu función confirmarMail)
+          const code = String(await enviarCodigo(email)); // Suponiendo que esta función genera un código de verificación
+          console.log('Código generado:', code); // Mostramos el código generado
+          setGeneratedCode(code); // Guardamos el código generado en el estado
+          setIsConfirmationModalOpen(true); // Abrimos la ventana emergente
+
         } else {
           console.log('Formulario inválido');
         }
@@ -255,7 +241,7 @@ const Header = () => {
             <header className="header">
                 <div className="logo-titulo">
                     <a href="#" className="logo"><img src={Fukusuke} alt="Logo" className="header-logo" /></a>
-                    <h1 className="titulo"><a href='#'>Fukusuke</a></h1>
+                    <h1 className="titulo"><a href='/'>Fukusuke</a></h1>
                 </div>
                 <div className="header-button">
                     <button className="menu-button" onClick={goToHome}>Inicio</button>
@@ -274,7 +260,7 @@ const Header = () => {
                         </div>
                         ) : (
                             <button className="menu-button" onClick={openLoginModal}>
-                                Iniciar sesión
+                                Registro/Login
                             </button>
                     )}
                     </div>
@@ -357,7 +343,7 @@ const Header = () => {
                                 ))}
                             </select>
                             {/*--------------------------------------------------------------------*/}
-                            <button type="button" onClick={handleSendConfirmationCode} className="register-button">Enviar Código de Confirmación</button>
+                            <button type="button" onClick={handleSubmit} className="register-button">Enviar Código de Confirmación</button>
 
 
                             {!isFormValid && <p style={{ color: 'red' }}>Por favor complete todos los campos correctamente</p>}
@@ -369,20 +355,24 @@ const Header = () => {
             {isConfirmationModalOpen && (
               <div className="modal">
                 <div className="modal-content">
-                    <span className="close-button" onClick={closeConfirmationModal()}>&times;</span>
-                    <h2>Ingrese el código enviado a su correo {email}</h2>
-                    <input
+                  <span className="close-button" onClick={closeConfirmationModal} >&times;</span>
+                  <h2>Ingrese el código enviado a su correo {email}</h2>
+
+                  {/* Campo de entrada para el código */}
+                  <input
                     type="text"
-                    id="confirmation-code"
-                    placeholder="Código de confirmación"
                     value={confirmationCode}
-                    onChange={(e) => setConfirmationCode(e.target.value)}
-                    required
-                    />
-                    <button onClick={handleConfirmCode}>Verificar Código</button>
-                    {isInvalidCode && <p style={{ color: 'red' }}>Código incorrecto, por favor intente nuevamente.</p>}
+                    onChange={(e) => setConfirmationCode(e.target.value)} // Actualizar el código ingresado
+                    placeholder="Código de confirmación"
+                  />
+                  
+                  {/* Botón para confirmar el código */}
+                  <button type="button" onClick={handleConfirmCode}>Confirmar Código</button>
+
+                  {/* Mensaje de error si el código es incorrecto */}
+                  {isInvalidCode && <p style={{ color: 'red' }}>El código es incorrecto, por favor intente nuevamente.</p>}
                 </div>
-            </div>
+              </div>
             )}
 
             {isCartOpen && (

@@ -22,9 +22,16 @@ const Product = sequelize.define('Product', {
     type: DataTypes.TINYINT,
     defaultValue: 1, // 1 para disponible, 0 para no disponible
   },
+  image: {
+    type: DataTypes.STRING, // Define el tipo como STRING para almacenar URLs
+  },
+  
+  
 }, {
-  tableName: 'products',
+  tableName: 'products', // Nombre de la tabla en la base de datos
   timestamps: true,
+  createdAt: 'created_at', // Cambiar createdAt a created_at
+  updatedAt: 'updated_at', // Cambiar updatedAt a updated_at
 });
 
 module.exports = Product;

@@ -9,6 +9,7 @@ import {
 import Header from './components/header/Header';
 import Footer from "./components/Footer/Footer";
 import { CartProvider } from "./components/Carrito/Carrito";
+import { AuthProvider } from './functions/AuthContext';
 
 import Home from './pages/home/Home';
 import Compra from './pages/Compra/Compra';
@@ -25,22 +26,24 @@ import Menu from "./pages/Menu/Menu";
 function App() {
   return (
     <Router>
-      <CartProvider>
-        <div id="root">
-          <Header />
-          <div className="main-content">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/admin" element={<Admin />} />
-              <Route path="/despacho" element={<Despacho />} />
-              <Route path="/Dueno" element={<Dueno />} />
-              <Route path="/compra" element={<Compra />} />
-              <Route path="/Menu" element={<Menu />} />
-            </Routes>
+
+      <AuthProvider>
+        <CartProvider>
+          <div id="root">
+            <Header />
+            <div className="main-content">
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/compra" element={<Compra />} />
+                <Route path="/admin" element={<Admin />} />
+                <Route path="/despacho" element={<Despacho />} />
+                <Route path="/Dueno" element={<Dueno />} />
+              </Routes>
+            </div>
+            <Footer />
           </div>
-          <Footer />
-        </div>
-      </CartProvider>
+        </CartProvider>
+      </AuthProvider>
     </Router>
 
   );

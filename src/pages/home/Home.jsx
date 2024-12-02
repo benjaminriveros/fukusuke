@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext,useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sushi from '../../assets/sushi.jpg';
 import Ebi from '../../assets/Ebi-Keto-Oriental.png';
@@ -14,6 +14,8 @@ export const HomePage = () => {
   // Estado para el modal
   const [selectedPromo, setSelectedPromo] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [menuItems, setMenuItems] = useState([]);
+  const [error, setError] = useState('');
 
   const sushiMenu = [
     {
@@ -65,8 +67,32 @@ export const HomePage = () => {
       image: promo50,
     },
   ];
+
+  
   const { addToCart } = useContext(CartContext); // Acceso al contexto
   const navigate = useNavigate();
+
+
+    // Función para obtener los productos del menú desde la BD
+    const fetchMenuItems = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/api/products'); // Cambia el endpoint según tu backend
+        if (!response.ok) {
+          throw new Error(`Error HTTP: ${response.status} - ${response.statusText}`);
+        }
+        const data = await response.json();
+        console.log('Productos obtenidos:', data);
+        setMenuItems(data); // Almacena los productos obtenidos en el estado
+        setError('');
+      } catch (err) {
+        console.error('Error al obtener los productos del menú:', err);
+        setError('No se pudieron cargar los productos. Intenta de nuevo más tarde.');
+      }
+    };
+
+  useEffect(() => {
+    fetchMenuItems();
+  }, []);
 
   // Funciones para el modal
   const openModal = (promo) => {
@@ -149,13 +175,13 @@ export const HomePage = () => {
       {/* Sección de menú */}
       <div className="menu-section">
         <h2>Nuestra Carta</h2>
+        {error && <p style={{ color: 'red' }}>{error}</p>}
         <div className="sushi-menu">
-          {sushiMenu.map((item, index) => (
-            <div key={index} className="sushi-item">
+          {menuItems.map((item) => (
+            <div key={item.id} className="sushi-item">
               <img src={item.image} alt={item.name} className="sushi-image" />
               <h3>{item.name}</h3>
               <p>
-                <span className="old-price">${item.oldPrice.toLocaleString()}</span>{" "}
                 <span className="current-price">${item.price.toLocaleString()}</span>
               </p>
               <button className="add-to-cart" onClick={() => addToCart(item)}>

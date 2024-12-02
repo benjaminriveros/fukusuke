@@ -1,9 +1,11 @@
 import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { CartContext } from "../../components/Carrito/Carrito.js";
+import { AuthContext } from "../../functions/AuthContext";
 import "./Compra.css";
 
 const Compra = () => {
+  const { isAuthenticated } = useContext(AuthContext);
   const { cartItems, setCartItems } = useContext(CartContext); // Obtener cartItems y setCartItems del contexto
   const [metodoPago, setMetodoPago] = useState("");
   const [estadoPago, setEstadoPago] = useState(null);
@@ -85,7 +87,13 @@ const Compra = () => {
       </div>
       <button
         className="confirmar-button"
-        onClick={confirmarCompra}
+        onClick={() => {
+          if (isAuthenticated) {
+            confirmarCompra();
+          } else {
+            alert('Necesitas iniciar sesión para confirmar la compra.');
+          }
+        }}
         disabled={!metodoPago}
       >
         Pagar

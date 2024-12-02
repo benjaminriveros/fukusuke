@@ -5,8 +5,8 @@ import Fukusuke from '../../assets/fukusuke.png';
 import { CartContext } from "../../components/Carrito/Carrito.js";
 import { validatePassword, validateRut, validatePhoneNumber } from '../../functions/LoginRules';
 import { CiShoppingCart } from "react-icons/ci";
-import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from "react-router-dom"; // Importa useNavigate
+import { AuthContext } from '../../functions/AuthContext'; // Importa el contexto de autenticación
 
 
 async function enviarCodigo(correo) {
@@ -64,30 +64,13 @@ const Header = () => {
     const [isFormValid, setIsFormValid] = useState(true);
     const [registerSuccessMessage, setRegisterSuccessMessage] = useState('');
     // Login
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const {isAuthenticated, setIsAuthenticated } = useContext(AuthContext);
     //Carrito
     const { cartItems, increaseQuantity,decreaseQuantity,removeFromCart,confirmPurchase,cancelPurchase, } = useContext(CartContext); // Acceso al carrito
     const [isCartOpen, setIsCartOpen] = useState(false);
 
     const openCart = () => setIsCartOpen(true);
     const closeCart = () => setIsCartOpen(false);
- 
-
-    // Manejar la autenticación
-    useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (token) {
-            try {
-                const decoded = jwtDecode(token); // Decodifica el token
-                console.log('Token decodificado:', decoded); // Verifica el contenido del token
-                setUsername(decoded.name || ''); // Asegúrate de manejar un campo "name" vacío
-                setIsAuthenticated(true);
-            } catch (error) {
-                console.error('Token inválido:', error);
-                localStorage.removeItem('token');
-            }
-        }
-    }, []);
 
     const handleGenderChange = (e) => {
         setGender(e.target.value);
@@ -170,33 +153,33 @@ const Header = () => {
     };
 
     //Login
-    const handleLoginSubmit = async () => {
-        confirmPurchase(navigate);
-      
-        try {
-          const response = await fetch('http://localhost:3000/api/users/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password }),
-          });
-      
-          const data = await response.json();
-      
-          if (response.ok) {
-            console.log('Inicio de sesión exitoso:', data);
-            alert('Inicio de sesión exitoso');
-            // Puedes guardar el token en localStorage o manejarlo según tu lógica
-            localStorage.setItem('token', data.token);
-            window.location.reload(); // Refrescar página
-          } else {
-            console.error('Error al iniciar sesión:', data);
-            alert(`Error: ${data.message}`);
-          }
-        } catch (err) {
-          console.error('Error:', err);
-          alert('Error al procesar la solicitud.');
+    const handleLoginSubmit = async (e) => {
+      e.preventDefault();
+    
+      try {
+        const response = await fetch('http://localhost:3000/api/users/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password }),
+        });
+    
+        const data = await response.json();
+    
+        if (response.ok) {
+          console.log('Inicio de sesión exitoso:', data);
+          alert('Inicio de sesión exitoso');
+          // Puedes guardar el token en localStorage o manejarlo según tu lógica
+          localStorage.setItem('token', data.token);
+          window.location.reload(); // Refrescar página
+        } else {
+          console.error('Error al iniciar sesión:', data);
+          alert(`Error: ${data.message}`);
         }
-      };
+      } catch (err) {
+        console.error('Error:', err);
+        alert('Error al procesar la solicitud.');
+      }
+    };
 
     const handleLogout = () => {
         localStorage.removeItem('token'); // Eliminar el token
@@ -284,7 +267,7 @@ const Header = () => {
                         </div>
                         ) : (
                             <button className="menu-button" onClick={openLoginModal}>
-                                Iniciar sesión
+                                Registro/Login
                             </button>
                     )}
                     </div>

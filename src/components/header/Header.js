@@ -1,7 +1,13 @@
-import React, { useState } from 'react';
+
+import React, {useContext, useState, useEffect} from 'react';
 import './Header.css'; // Make sure to create a CSS file for styling
 import Fukusuke from '../../assets/fukusuke.png';
+import { CartContext } from "../../pages/Carrito/Carrito.jsx";
 import { validatePassword, validateRut, validatePhoneNumber } from '../../functions/LoginRules';
+import { CiShoppingCart } from "react-icons/ci";
+import { jwtDecode } from 'jwt-decode';
+
+
 
 const Header = () => {
     const genderOptions = [
@@ -28,6 +34,27 @@ const Header = () => {
     const [phoneError, setPhoneError] = useState('');
     const [isFormValid, setIsFormValid] = useState(true);
     const [registerSuccessMessage, setRegisterSuccessMessage] = useState('');
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const { cartItems, increaseQuantity,decreaseQuantity,removeFromCart,confirmPurchase,cancelPurchase, } = useContext(CartContext); // Acceso al carrito
+    const [isCartOpen, setIsCartOpen] = useState(false);
+
+    const openCart = () => setIsCartOpen(true);
+    const closeCart = () => setIsCartOpen(false);
+    // Manejar la autenticación
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            try {
+                const decoded = jwtDecode(token); // Decodifica el token
+                console.log('Token decodificado:', decoded); // Verifica el contenido del token
+                setUsername(decoded.name || ''); // Asegúrate de manejar un campo "name" vacío
+                setIsAuthenticated(true);
+            } catch (error) {
+                console.error('Token inválido:', error);
+                localStorage.removeItem('token');
+            }
+        }
+    }, []);
 
     const handleGenderChange = (e) => {
         setGender(e.target.value);
@@ -49,110 +76,134 @@ const Header = () => {
         setIsRegisterModalOpen(false);
     };
 
+    const handleLoginSubmit = async (e) => {
+        e.preventDefault();
+      
+        try {
+          const response = await fetch('http://localhost:3000/api/users/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password }),
+          });
+      
+          const data = await response.json();
+      
+          if (response.ok) {
+            console.log('Inicio de sesión exitoso:', data);
+            alert('Inicio de sesión exitoso');
+            // Puedes guardar el token en localStorage o manejarlo según tu lógica
+            localStorage.setItem('token', data.token);
+            window.location.reload(); // Refrescar página
+          } else {
+            console.error('Error al iniciar sesión:', data);
+            alert(`Error: ${data.message}`);
+          }
+        } catch (err) {
+          console.error('Error:', err);
+          alert('Error al procesar la solicitud.');
+        }
+      };
+
+    const handleLogout = () => {
+        localStorage.removeItem('token'); // Eliminar el token
+        setIsAuthenticated(false); // Cambiar el estado de autenticación
+        setUsername(''); // Vaciar el nombre de usuario
+        window.location.reload(); // Recargar la página
+    };
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+      
         let isValid = true;
-
+      
         if (!validatePassword(password)) {
-            setPasswordError('Contraseña debe tener al menos 8 caracteres, una letra mayúscula, una letra minúscula y un número.');
-            isValid = false;
+          setPasswordError('Contraseña debe tener al menos 8 caracteres, una letra mayúscula, una letra minúscula y un número.');
+          isValid = false;
         } else {
-            setPasswordError('');
+          setPasswordError('');
         }
-
+      
         if (!validateRut(rut)) {
-            setRutError('RUT debe ser en formato 12345678-9.');
-            isValid = false;
+          setRutError('RUT debe ser en formato 12345678-9.');
+          isValid = false;
         } else {
-            setRutError('');
+          setRutError('');
         }
-
+      
         if (!validatePhoneNumber(telefono)) {
-            setPhoneError('Numero de telefono debe ser de 9 digitos.');
-            isValid = false;
+          setPhoneError('Número de teléfono debe ser de 9 dígitos.');
+          isValid = false;
         } else {
-            setPhoneError('');
+          setPhoneError('');
         }
-
+      
         setIsFormValid(isValid);
-
+      
         if (isValid) {
-            // Access form values here
-            console.log('Form submitted with values:', {
-                username,
-                rut,
-                password,
-                direccion,
-                region,
-                comuna,
-                telefono,
-                email,
-                nacimiento,
-                gender,
+          const data = {
+            name: username,
+            email: email,
+            password: password,
+            role: 'cliente',
+          };
+      
+          console.log('Data to be sent:', data); // Verificar estructura de los datos
+      
+          try {
+            const response = await fetch('http://localhost:3000/api/users/register', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(data),
             });
-            const selectedItems = [];
-            selectedItems.push({
-                name: parseInt(id_bloque, 10),
-                email: hour,
-                password: classType,
-                role: 'cliente',
-            })
-
-            const data = selectedItems;
-            console.log('Data to be sent:', data); // Log the data to verify its structure
-
-            try {
-                const response = await fetch(
-                  `http://localhost:3000/api/users/register`,
-                  {
-                    method: 'POST',
-                    headers: {
-                      'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data),
-                  }
-                );
-          
-                if (response.ok) {
-                    console.log('Data submitted successfully');
-                    window.location.reload(); // Refresh the page
-                } else {
-                    console.error('Fallo al enviar datos:', response);
-                }
-                }   catch (error) {
-                    console.error('Error:', error);
-                }
-
-
-            // Set success message and open login modal
-            setRegisterSuccessMessage('Registro completo!');
-            closeRegisterModal();
-            openLoginModal();
+      
+            if (response.ok) {
+              console.log('Data submitted successfully');
+              window.location.reload(); // Refrescar la página
+            } else {
+              const errorData = await response.json();
+              console.error('Fallo al enviar datos:', errorData);
+            }
+          } catch (error) {
+            console.error('Error:', error);
+          }
+      
+          setRegisterSuccessMessage('Registro completo!');
+          closeRegisterModal();
+          openLoginModal();
         } else {
-            console.log('Form is invalid');
+          console.log('Formulario inválido');
         }
-    };
-
+      };
 
     return (
         <>
             <header className="header">
-                <div className="header-left">
-                    <img src={Fukusuke} alt="Logo" className="header-logo" />
-                    <h1 className="header-title">Fukusuke</h1>
+                <div className="logo-titulo">
+                    <a href="#" className="logo"><img src={Fukusuke} alt="Logo" className="header-logo" /></a>
+                    <h1 className="titulo"><a href='#'>Fukusuke</a></h1>
                 </div>
                 <div className="header-button">
                     <button className="menu-button">Inicio</button>
-                </div>
-                <div className="header-button">
-                    <button className="menu-button">Menu</button>
-                </div>
-                <div className="header-button">
-                    <button className="menu-button">🛒 Carrito</button>
-                </div>
-                <div className="header-button">
-                    <button className="menu-button" onClick={openLoginModal}>Registro/Login</button>
+                    <button className="menu-button">Menú</button>
+                    <button className="menu-button" onClick={openCart}>
+                        <span className="cart-count">({cartItems.length})</span>
+                        <CiShoppingCart className="cart-icon" />
+                    </button>
+                                    <div className="header-button">
+                    {isAuthenticated ? (
+                        <div>
+                            <span>{username} </span>  
+                            <button className="menu-button" onClick={handleLogout}>
+                                Cerrar sesión
+                            </button>
+                        </div>
+                    ) : (
+                        <button className="menu-button" onClick={openLoginModal}>
+                            Registro/Login
+                        </button>
+                    )}
                 </div>
             </header>
 
@@ -162,12 +213,24 @@ const Header = () => {
                         <span className="close-button" onClick={closeLoginModal}>&times;</span>
                         <h2>Login</h2>
                         {registerSuccessMessage && <p style={{ color: 'green' }}>{registerSuccessMessage}</p>}
-                        <form className="login-form">
-                            <label htmlFor="username">Usuario:</label>
-                            <input type="text" id="username" name="username" required />
-                            <label htmlFor="password">Contraseña:</label>
-                            <input type="password" id="password" name="password" required />
-                            <button type="submit" className="login-button">Login</button>
+                        <form className="login-form" onSubmit={handleLoginSubmit}>
+                        <label htmlFor="login-email">Correo Electrónico:</label>
+                        <input
+                            type="email"
+                            id="login-email"
+                            name="login-email"
+                            required
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
+                        <label htmlFor="login-password">Contraseña:</label>
+                        <input
+                            type="password"
+                            id="login-password"
+                            name="login-password"
+                            required
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
+                        <button type="submit" className="login-button">Login</button>
                         </form>
                         <p>No tienes un usuario? <a href="#" onClick={() => { closeLoginModal(); openRegisterModal(); }}>Registrate</a></p>
                     </div>
@@ -226,6 +289,63 @@ const Header = () => {
                     </div>
                 </div>
             )}
+
+            {isCartOpen && (
+                    <div className="modal">
+                    <div className="modal-content">
+                        <span className="close-button" onClick={closeCart}>
+                        &times;
+                        </span>
+                        <h2>Carrito de Compras</h2>
+                        {cartItems.length === 0 ? (
+                        <p>El carrito está vacío.</p>
+                        ) : (
+                        <ul className="cart-items">
+                            {cartItems.map((item, index) => (
+                            <li key={index} className="cart-item">
+                                <span>{item.name}</span>
+                                <span> 
+                                    ${item.price.toLocaleString()} x {item.quantity} = $
+                                    {(item.price * item.quantity).toLocaleString()}
+                                </span>
+                                <div className="quantity-control">
+                                    <button onClick={() => decreaseQuantity(item.name)}>-</button>
+                                    <span>{item.quantity}</span>
+                                    <button onClick={() => increaseQuantity(item.name)}>+</button>
+                                </div>
+                                <button
+                                    className="remove-button"
+                                    onClick={() => removeFromCart(item.name)}
+                                >
+                                ❌
+                                </button>
+                            </li>
+                            ))}
+                        </ul>
+                        )}
+                        {cartItems.length > 0 && (
+                            <>
+                            <div className="cart-total">
+                                <h3>
+                                    Total: $
+                                    {cartItems
+                                        .reduce((total, item) => total + item.price * item.quantity, 0)
+                                        .toLocaleString()}
+                                 </h3>
+                            </div>
+                            <div className="cart-actions">
+                                <button onClick={confirmPurchase} className="confirm-button">
+                                    Confirmar compra
+                                </button>
+                                <button onClick={cancelPurchase} className="cancel-button">
+                                    Anular compra
+                                </button>
+                            </div>
+                        </>    
+                        )}
+                    </div>
+                </div>
+                )}
         </>
     );
 };

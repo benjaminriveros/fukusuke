@@ -6,6 +6,7 @@ import { CartContext } from "../../components/Carrito/Carrito.js";
 import { validatePassword, validateRut, validatePhoneNumber } from '../../functions/LoginRules';
 import { CiShoppingCart } from "react-icons/ci";
 import { jwtDecode } from 'jwt-decode';
+import { useNavigate } from "react-router-dom"; // Importa useNavigate
 
 
 
@@ -176,6 +177,10 @@ const Header = () => {
           console.log('Formulario inválido');
         }
       };
+      const navigate = useNavigate(); // Hook para navegar programáticamente
+      const goToHome = () => {
+        navigate("/"); // Navega a la página de inicio
+      };
 
     return (
         <>
@@ -185,7 +190,7 @@ const Header = () => {
                     <h1 className="titulo"><a href='#'>Fukusuke</a></h1>
                 </div>
                 <div className="header-button">
-                    <button className="menu-button">Inicio</button>
+                    <button className="menu-button" onClick={goToHome}>Inicio</button>
                     <button className="menu-button">Menú</button>
                     <button className="menu-button" onClick={openCart}>
                         <span className="cart-count">({cartItems.length})</span>

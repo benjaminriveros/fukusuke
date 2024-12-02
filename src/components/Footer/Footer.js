@@ -18,10 +18,10 @@ const Footer = () => {
           <h4>Cuentas</h4>
           <ul>
             <li>
-              <a href="/">Administrador</a>
+              <a href="/Admin">Administrador</a>
             </li>
             <li>
-              <a href="/">Dueño</a>
+              <a href="/Dueno">Dueño</a>
             </li>
             <li>
               <a href="/Despacho">Despacho</a>

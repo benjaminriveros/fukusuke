@@ -2,11 +2,12 @@
 import React, {useContext, useState, useEffect} from 'react';
 import './Header.css'; // Make sure to create a CSS file for styling
 import Fukusuke from '../../assets/fukusuke.png';
-import { CartContext } from "../../pages/Carrito/Carrito.jsx";
+import { CartContext } from "../../components/Carrito/Carrito.js";
 import { validatePassword, validateRut, validatePhoneNumber } from '../../functions/LoginRules';
 import { CiShoppingCart } from "react-icons/ci";
 import { jwtDecode } from 'jwt-decode';
-//import confirmarMail from '../../bussinesLogic/services/confirmarMail.js'
+import { useNavigate } from "react-router-dom"; // Importa useNavigate
+
 
 async function enviarCodigo(correo) {
   try {
@@ -232,6 +233,10 @@ const Header = () => {
           console.log('Formulario inválido');
         }
       };
+      const navigate = useNavigate(); // Hook para navegar programáticamente
+      const goToHome = () => {
+        navigate("/"); // Navega a la página de inicio
+      };
 
     return (
         <>
@@ -241,7 +246,7 @@ const Header = () => {
                     <h1 className="titulo"><a href='#'>Fukusuke</a></h1>
                 </div>
                 <div className="header-button">
-                    <button className="menu-button">Inicio</button>
+                    <button className="menu-button" onClick={goToHome}>Inicio</button>
                     <button className="menu-button">Menú</button>
                     <button className="menu-button" onClick={openCart}>
                         <span className="cart-count">({cartItems.length})</span>

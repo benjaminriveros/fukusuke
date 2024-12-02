@@ -9,7 +9,7 @@ import {
 import Header from './components/header/Header';
 import Footer from "./components/Footer/Footer";
 import { CartProvider } from "./components/Carrito/Carrito";
-
+import { AuthProvider } from './functions/AuthContext';
 import Home from './pages/home/Home';
 import Compra from './pages/Compra/Compra';
 import Admin from './pages/Admin/Admin';
@@ -19,11 +19,9 @@ import ProtectedRoute from './components/protectedRoute/protectedRoute';
 import Unauthorized from './components/Unauthorized/Unauthorized';
 import Menu from "./pages/Menu/Menu";
 
-
-
-
 function App() {
   return (
+    <AuthProvider>
     <CartProvider>
       <Router>
         <div id="root">
@@ -49,6 +47,7 @@ function App() {
         </div>
       </Router>
     </CartProvider>
+    </AuthProvider>
 
   );
 }

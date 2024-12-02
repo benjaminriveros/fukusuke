@@ -10,7 +10,7 @@
   position: relative; /* Necesario para el posicionamiento de .overlay-text */
   background-color: transparent;
   color: black;
-  height: 700px; /* Cambia de fijo (40vh) a automático */
+  height: 550px; /* Cambia de fijo (40vh) a automático */
   overflow: hidden; /* Asegúrate de que no haya desbordamientos */
 }
 
@@ -21,6 +21,7 @@
   filter: brightness(50%);
 }
 .content-a .overlay-text {
+    margin-top: 75px;
     position: absolute;
     top: 2%;
     left: 50%;

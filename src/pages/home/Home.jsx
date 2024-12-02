@@ -84,13 +84,12 @@ export const HomePage = () => {
   return (
     <>
       {/* Imagen de bienvenida */}
-      <div className="content">
-        <div className="image-container">
-          <img src={Sushi} className="background-image" alt="Sushi" />
-          <h1 className="overlay-text">Bienvenido a Fukusuke</h1>
-        </div>
-      </div>
+      <div className="content-a">
 
+        <img src={Sushi} className="background-image" alt="Sushi" />
+        <h1 className="overlay-text">Bienvenido a Fukusuke</h1>
+
+      </div>
       {/* Sección de promociones */}
       <div className="promos-section">
         <h2>Nuestras promos favoritas</h2>

@@ -9,6 +9,7 @@ import {
 import Header from './components/header/Header';
 import Footer from "./components/Footer/Footer";
 import { CartProvider } from "./components/Carrito/Carrito";
+import { AuthProvider } from './functions/AuthContext';
 
 import Home from './pages/home/Home';
 import Compra from './pages/Compra/Compra';
@@ -24,22 +25,24 @@ import Dueno from "./pages/Dueno/Dueno";
 function App() {
   return (
     <Router>
-      <CartProvider>
-        <div id="root">
-          <Header />
-          <div className="main-content">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/compra" element={<Compra />} />
-              <Route path="/admin" element={<Admin />} />
-              <Route path="/despacho" element={<Despacho />} />
-              <Route path="/Dueno" element={<Dueno />} />
-              <Route path="/compra" element={<Compra />} />
-            </Routes>
+      <AuthProvider>
+        <CartProvider>
+          <div id="root">
+            <Header />
+            <div className="main-content">
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/compra" element={<Compra />} />
+                <Route path="/admin" element={<Admin />} />
+                <Route path="/despacho" element={<Despacho />} />
+                <Route path="/Dueno" element={<Dueno />} />
+                <Route path="/compra" element={<Compra />} />
+              </Routes>
+            </div>
+            <Footer />
           </div>
-          <Footer />
-        </div>
-      </CartProvider>
+        </CartProvider>
+      </AuthProvider>
     </Router>
 
   );

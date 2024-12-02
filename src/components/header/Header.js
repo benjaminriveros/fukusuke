@@ -36,6 +36,7 @@ async function enviarCodigo(correo) {
 
 
 const Header = () => {
+    const navigate = useNavigate(); // Hook para navegar programáticamente
     const genderOptions = [
         { value: '', label: 'Seleccione un género' },
         { value: 'masculine', label: 'Masculino' },
@@ -63,6 +64,8 @@ const Header = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const { cartItems, increaseQuantity,decreaseQuantity,removeFromCart,confirmPurchase,cancelPurchase, } = useContext(CartContext); // Acceso al carrito
     const [isCartOpen, setIsCartOpen] = useState(false);
+
+ 
 
     const openCart = () => setIsCartOpen(true);
     const closeCart = () => setIsCartOpen(false);
@@ -133,8 +136,8 @@ const Header = () => {
         setIsConfirmationModalOpen(false); // Cierra la ventana emergente
         setIsInvalidCode(false); // Limpiar posibles errores
     };
-    const handleLoginSubmit = async (e) => {
-        e.preventDefault();
+    const handleLoginSubmit = async () => {
+        confirmPurchase(navigate);
       
         try {
           const response = await fetch('http://localhost:3000/api/users/login', {
@@ -233,9 +236,14 @@ const Header = () => {
           console.log('Formulario inválido');
         }
       };
-      const navigate = useNavigate(); // Hook para navegar programáticamente
+      
       const goToHome = () => {
         navigate("/"); // Navega a la página de inicio
+      };
+      
+      const handleConfirmPurchase = () => {
+        confirmPurchase(); // Llama a la función sin parámetros
+        navigate("/compra"); // Usa navigate para redirigir
       };
 
     return (
@@ -418,10 +426,10 @@ const Header = () => {
                             </div>
                             <div className="cart-actions">
                                 <button onClick={confirmPurchase} className="confirm-button">
-                                    Confirmar compra
+                                    Confirmar Carrito
                                 </button>
-                                <button onClick={cancelPurchase} className="cancel-button">
-                                    Anular compra
+                                <button onClick={() => confirmPurchase(navigate)} className="cancel-button">
+                                    Anular Carrito
                                 </button>
                             </div>
                         </>    

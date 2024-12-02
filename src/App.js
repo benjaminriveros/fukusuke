@@ -20,6 +20,7 @@ import Dueno from "./pages/Dueno/Dueno";
 
 
 
+
 function App() {
   return (
     <CartProvider>
@@ -33,6 +34,7 @@ function App() {
               <Route path="/admin" element={<Admin />} />
               <Route path="/despacho" element={<Despacho />} />
               <Route path="/Dueno" element={<Dueno />} />
+              <Route path="/compra" element={<Compra />} />
             </Routes>
           </div>
           <Footer />

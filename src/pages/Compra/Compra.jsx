@@ -1,100 +1,103 @@
-import React, { useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Sushi from '../../assets/sushi.jpg';
-import Ebi from '../../assets/Ebi-Keto-Oriental.png';
-import Almond from '../../assets/Almond-Oriental.png';
-import Avocado from '../../assets/Avocado-Furai-Oriental.png';
-import Sabi from '../../assets/Sabi-Oriental.png';
-import promo30 from '../../assets/Promo-30.png';
-import promo50 from '../../assets/Promo-50-frito.png';
-import './Compra.css';
+import React, { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { CartContext } from "../../components/Carrito/Carrito.js";
+import "./Compra.css";
 
-export const Compra = () => {
-  // Estado para el modal
-  const [selectedPromo, setSelectedPromo] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const sushiMenu = [
-    {
-      name: "Ebi Keto Oriental",
-      price: 7200,
-      oldPrice: 14400,
-      image: Ebi,
-    },
-    {
-      name: "Almond Oriental",
-      price: 6000,
-      oldPrice: 12000,
-      image: Almond,
-    },
-    {
-      name: "Sabi Oriental",
-      price: 7400,
-      oldPrice: 14800,
-      image: Sabi,
-    },
-    {
-      name: "Avocado Furai Oriental",
-      price: 7200,
-      oldPrice: 14400,
-      image: Avocado,
-    },
-  ];
-
-  const promos = [
-    {
-      id: 1,
-      name: "Promo 30 Premium",
-      description: [
-        "Camarón, queso, cebollín, envuelto en palta.",
-        "Salmón, palta, cebollín, envuelto en queso.",
-        "Atún, palta, queso, envuelto en ciboulette.",
-      ],
-      price: 14990,
-      image: promo30,
-    },
-    {
-      id: 2,
-      name: "Promo 50 Frito",
-      description: [
-        "Queso, cebollín, pollo, frito en panko.",
-        "Queso, cebollín, camarón, frito en panko.",
-      ],
-      price: 16990,
-      image: promo50,
-    },
-  ];
-  const { addToCart } = useContext(CartContext); // Acceso al contexto
+const Compra = () => {
+  const { cartItems, setCartItems } = useContext(CartContext); // Obtener cartItems y setCartItems del contexto
+  const [metodoPago, setMetodoPago] = useState("");
+  const [estadoPago, setEstadoPago] = useState(null);
   const navigate = useNavigate();
+  
+  const confirmarCompra = async () => {
+    if (!metodoPago) {
+      alert("Por favor, seleccione un método de pago.");
+      return;
+    }
 
-  // Funciones para el modal
-  const openModal = (promo) => {
-    setSelectedPromo(promo);
-    setIsModalOpen(true);
+    // Procesar el pago (simulado o con backend)
+    const resultado = { success: true };// Cambia esto por la lógica de tu backend
+
+    if (resultado.success) {
+      setEstadoPago("exitoso");
+      setCartItems([]); // Vaciar carrito después del pago exitoso
+      alert("Su pedido se está preparando.");
+      setTimeout(() => {
+        navigate("/"); // Redirigir al inicio después de unos segundos
+      }, 3000);
+    } else {
+      setEstadoPago("fallido");
+      alert(`Error: ${resultado.message}`);
+    }
   };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setSelectedPromo(null);
+  const calcularTotal = () => {
+    return cartItems.reduce(
+      (total, item) => total + item.price * item.quantity,
+      0
+    );
   };
-
-
 
   return (
-    <>
-      {/* Imagen de bienvenida */}
-      <div className="content">
-        acca se dbeen incluir las cosas que se quieren comprar
+    <div className="compra-container">
+      <h2>Confirmar Compra</h2>
+      <div className="productos-carrito">
+        <h3>Productos en tu carrito</h3>
+        <ul>
+          {cartItems.map((item, index) => (
+            <li key={index}>
+              {item.name} - {item.quantity} x ${item.price.toLocaleString()} ={" "}
+              ${((item.price * item.quantity).toLocaleString())}
+            </li>
+          ))}
+        </ul>
+        <h4>Total: ${calcularTotal().toLocaleString()}</h4>
       </div>
+      <p>Seleccione su método de pago:</p>
+      <div className="metodos-pago">
+        <label>
+          <input
+            type="radio"
+            name="metodoPago"
+            value="Tarjeta de Débito"
+            onChange={(e) => setMetodoPago(e.target.value)}
+          />
+          Tarjeta de Débito
+        </label>
+        <label>
+          <input
+            type="radio"
+            name="metodoPago"
+            value="Tarjeta de Crédito"
+            onChange={(e) => setMetodoPago(e.target.value)}
+          />
+          Tarjeta de Crédito
+        </label>
+        <label>
+          <input
+            type="radio"
+            name="metodoPago"
+            value="Efectivo"
+            onChange={(e) => setMetodoPago(e.target.value)}
+          />
+          Efectivo
+        </label>
+      </div>
+      <button
+        className="confirmar-button"
+        onClick={confirmarCompra}
+        disabled={!metodoPago}
+      >
+        Pagar
+      </button>
 
-      {/* Sección de promociones */}
-
-      {/* Modal */}
-
-      {/* Sección de menú */}
-
-    </>
+      {estadoPago === "exitoso" && (
+        <p className="mensaje-exito">El pago fue exitoso. ¡Su pedido se está preparando!</p>
+      )}
+      {estadoPago === "fallido" && (
+        <p className="mensaje-error">El pago falló. Por favor, intente nuevamente.</p>
+      )}
+    </div>
   );
 };
 

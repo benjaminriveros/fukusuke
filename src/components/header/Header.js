@@ -192,7 +192,7 @@ const Header = () => {
                         <CiShoppingCart className="cart-icon" />
                     </button>
                     <div className="header-button">
-                    {isAuthenticated ? (
+                        {isAuthenticated ? (
                         <div>
                             <span>{username} </span>  
                             <button className="menu-button" onClick={handleLogout}>

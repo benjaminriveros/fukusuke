@@ -1,7 +1,7 @@
 const sendGridMail = require('@sendgrid/mail');
-
+require('dotenv').config();
 // Configura tu clave de API de SendGrid
-sendGridMail.setApiKey('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');  // Sustituye con tu clave API
+sendGridMail.setApiKey(process.env.SENDGRID_API_KEY);  // Sustituye con tu clave API
 // Función para generar un código aleatorio de 6 dígitos
 function generarCodigo() {
   return Math.floor(100000 + Math.random() * 900000); // Genera un número de 6 dígitos

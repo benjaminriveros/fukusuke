@@ -7,8 +7,9 @@ const saleRoutes = require('./routes/saleRoutes');
 const customerRoutes = require('./routes/customerRoutes');
 const { enviarCorreo } = require('./routes/confirmarMail');
 const sendGridMail = require('@sendgrid/mail');
-sendGridMail.setApiKey('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');
+require('dotenv').config();
 
+sendGridMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const app = express();
 const cors = require('cors');

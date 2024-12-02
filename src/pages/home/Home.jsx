@@ -139,7 +139,7 @@ export const HomePage = () => {
               </label>
             </div>
             <div className="modal-footer">
-              <button className="add-to-cart-button">
+              <button className="add-to-cart-button" onClick={() => {addToCart(selectedPromo);closeModal(); }}>
                 Añadir al carrito - ${selectedPromo.price.toLocaleString()}
               </button>
             </div>

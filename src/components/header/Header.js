@@ -39,7 +39,7 @@ const Header = () => {
         setIsRegisterModalOpen(false);
     };
 
-    const { cartItems } = useContext(CartContext); // Acceso al carrito
+    const { cartItems, increaseQuantity,decreaseQuantity,removeFromCart,confirmPurchase,cancelPurchase, } = useContext(CartContext); // Acceso al carrito
     const [isCartOpen, setIsCartOpen] = useState(false);
 
     const openCart = () => setIsCartOpen(true);
@@ -133,18 +133,44 @@ const Header = () => {
                             {cartItems.map((item, index) => (
                             <li key={index} className="cart-item">
                                 <span>{item.name}</span>
-                                <span>${item.price.toLocaleString()}</span>
+                                <span> 
+                                    ${item.price.toLocaleString()} x {item.quantity} = $
+                                    {(item.price * item.quantity).toLocaleString()}
+                                </span>
+                                <div className="quantity-control">
+                                    <button onClick={() => decreaseQuantity(item.name)}>-</button>
+                                    <span>{item.quantity}</span>
+                                    <button onClick={() => increaseQuantity(item.name)}>+</button>
+                                </div>
+                                <button
+                                    className="remove-button"
+                                    onClick={() => removeFromCart(item.name)}
+                                >
+                                ❌
+                                </button>
                             </li>
                             ))}
                         </ul>
                         )}
                         {cartItems.length > 0 && (
-                        <div className="cart-total">
-                            <h3>
-                            Total: $
-                            {cartItems.reduce((total, item) => total + item.price, 0).toLocaleString()}
-                            </h3>
-                        </div>
+                            <>
+                            <div className="cart-total">
+                                <h3>
+                                    Total: $
+                                    {cartItems
+                                        .reduce((total, item) => total + item.price * item.quantity, 0)
+                                        .toLocaleString()}
+                                 </h3>
+                            </div>
+                            <div className="cart-actions">
+                                <button onClick={confirmPurchase} className="confirm-button">
+                                    Confirmar compra
+                                </button>
+                                <button onClick={cancelPurchase} className="cancel-button">
+                                    Anular compra
+                                </button>
+                            </div>
+                        </>    
                         )}
                     </div>
                 </div>

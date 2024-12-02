@@ -188,3 +188,81 @@
         max-width: 300px;
     }
 }
+
+.quantity-control {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 5px;
+    background-color: #f9f9f9;
+    width: fit-content;
+  }
+  
+  .quantity-control button {
+    background-color: transparent;
+    border: none;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 5px 10px;
+    color: #007bff;
+  }
+  
+  .quantity-control button:hover {
+    color: #0056b3;
+  }
+  
+  .quantity-control span {
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    min-width: 20px;
+  }
+  
+  .remove-button {
+    background-color: transparent;
+    border: none;
+    color: red;
+    font-size: 16px;
+    cursor: pointer;
+    margin-left: 10px;
+  }
+  
+  .remove-button:hover {
+    color: darkred;
+  }
+  
+  .cart-actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .confirm-button {
+    background-color: green;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .cancel-button {
+    background-color: red;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .confirm-button:hover {
+    background-color: darkgreen;
+  }
+  
+  .cancel-button:hover {
+    background-color: darkred;
+  }
+  

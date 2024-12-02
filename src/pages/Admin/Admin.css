@@ -41,8 +41,7 @@ form {
   margin-bottom: 20px;
   flex-wrap: wrap;
   justify-content: space-between;
-  background-color: rgb(39, 39, 39);
-  color: #f1f1f1;
+  background-color: white;
   padding: 15px;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -52,8 +51,6 @@ form {
 form input,
 form select,
 form button {
-  color: #f1f1f1;
-  background-color: rgb(39, 39, 39);
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -63,7 +60,7 @@ form button {
 }
 
 form button {
-  background-color: #3b9456;
+  background-color: #007bff;
   color: white;
   cursor: pointer;
   transition: background-color 0.3s;
@@ -71,7 +68,7 @@ form button {
 }
 
 form button:hover {
-  background-color: #2d693f;
+  background-color: #0056b3;
 }
 
 /* Tablas */
@@ -79,14 +76,15 @@ table {
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 20px;
-  background-color: rgb(39, 39, 39);
+  background-color: white;
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  color: black;
 }
 
 table thead {
-  background-color: rgb(39, 39, 39);
+  background-color: #007bff;
   color: white;
 }
 
@@ -102,7 +100,7 @@ table tr:last-child td {
 }
 
 table tr:hover {
-  background-color: rgb(39, 39, 39);
+  background-color: #f1f1f1;
 }
 
 table td button {
@@ -111,25 +109,6 @@ table td button {
   border-radius: 5px;
   cursor: pointer;
   font-size: 0.9rem;
-}
-.btn-prd{
-  background-color: #7d832f;
-  color: white;
-  margin-left: 25px;
-}
-.btn-prd-e{
-  background-color: #a82e2e;
-  color: white;
-  margin-left: 5px;
-}
-
-.btn-prd:hover{
-  background-color: #585c21;
-
-}
-.btn-prd-e:hover{
-  background-color: #691c1c;
-
 }
 
 table td button.edit {
@@ -222,7 +201,7 @@ table td button.delete:hover {
 }
 
 .modal-content {
-  background-color: rgb(44, 44, 44);
+  background-color: white;
   padding: 20px;
   border-radius: 10px;
   border-color: black;
@@ -230,7 +209,7 @@ table td button.delete:hover {
   width: 90%;
   max-width: 600px;
   position: relative;
-  text-align: center;
+  text-align: left;
   color:black
 }
 
@@ -328,4 +307,21 @@ table td button.delete:hover {
     background-color: white;
     color: black;
     border: 1px solid black;
+}
+
+.btn-prd{
+  background-color: #7d832f;
+  color: white;
+  margin-left: 25px;
+}
+.btn-prd-e{
+  background-color: #a82e2e;
+  color: white;
+  margin-left: 5px;
+}
+.btn-prd:hover{
+  background-color: #585c21;
+}
+.btn-prd-e:hover{
+  background-color: #691c1c;
 }

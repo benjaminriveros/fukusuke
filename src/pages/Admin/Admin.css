@@ -45,6 +45,7 @@ form {
   padding: 15px;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  color:black
 }
 
 form input,
@@ -137,7 +138,7 @@ table td button.delete:hover {
 
 .promo-item {
   width: 280px;
-  background-color: white;
+  background-color: #222;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   overflow: hidden;
@@ -202,10 +203,13 @@ table td button.delete:hover {
   background-color: white;
   padding: 20px;
   border-radius: 10px;
+  border-color: black;
+  border-width: 2px;
   width: 90%;
   max-width: 600px;
   position: relative;
   text-align: center;
+  color:black
 }
 
 .modal-content h3 {
@@ -263,4 +267,43 @@ table td button.delete:hover {
   .promo-item {
     width: 100%;
   }
+}
+
+.login-form,
+.register-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.login-form label,
+.register-form label {
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.login-form input,
+.register-form input,
+.register-form select {
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.login-button,
+.register-button {
+    background-color: black;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.login-button:hover,
+.register-button:hover {
+    background-color: white;
+    color: black;
+    border: 1px solid black;
 }

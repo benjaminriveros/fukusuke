@@ -36,3 +36,21 @@
     transform: rotate(360deg);
   }
 }
+/* App.css */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: Arial, sans-serif;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1; /* Empuja el footer al final */
+}
+

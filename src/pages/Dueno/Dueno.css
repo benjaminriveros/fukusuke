@@ -1,0 +1,37 @@
+.reportes-container {
+    padding: 20px;
+  }
+  
+  h2 {
+    text-align: center;
+  }
+  
+  .date-picker {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  
+  .date-picker label {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .sales-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px auto;
+  }
+  
+  .sales-table th,
+  .sales-table td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+  }
+  
+  .sales-table th {
+    background-color: #f4f4f4;
+  }
+  

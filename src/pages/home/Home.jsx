@@ -8,7 +8,7 @@ import Sabi from '../../assets/Sabi-Oriental.png';
 import promo30 from '../../assets/Promo-30.png';
 import promo50 from '../../assets/Promo-50-frito.png';
 import './Home.css';
-import { CartContext } from "../../pages/Carrito/Carrito.jsx";
+import { CartContext } from "../../components/Carrito/Carrito.js";
 
 export const HomePage = () => {
   // Estado para el modal
@@ -88,13 +88,12 @@ export const HomePage = () => {
   return (
     <>
       {/* Imagen de bienvenida */}
-      <div className="content">
-        <div className="image-container">
-          <img src={Sushi} className="background-image" alt="Sushi" />
-          <h1 className="overlay-text">Bienvenido a Fukusuke</h1>
-        </div>
-      </div>
+      <div className="content-a">
 
+        <img src={Sushi} className="background-image" alt="Sushi" />
+        <h1 className="overlay-text">Bienvenido a Fukusuke</h1>
+
+      </div>
       {/* Sección de promociones */}
       <div className="promos-section">
         <h2>Nuestras promos favoritas</h2>
@@ -143,7 +142,7 @@ export const HomePage = () => {
               </label>
             </div>
             <div className="modal-footer">
-              <button className="add-to-cart-button">
+              <button className="add-to-cart-button" onClick={() => {addToCart(selectedPromo);closeModal(); }}>
                 Añadir al carrito - ${selectedPromo.price.toLocaleString()}
               </button>
             </div>

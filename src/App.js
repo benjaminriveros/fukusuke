@@ -7,13 +7,16 @@ import {
 } from 'react-router-dom';
 
 import Header from './components/header/Header';
+import Footer from "./components/Footer/Footer";
+import { CartProvider } from "./components/Carrito/Carrito";
 
 import Home from './pages/home/Home';
 import Compra from './pages/Compra/Compra';
 import Admin from './pages/Admin/Admin';
-import Footer from "./components/Footer/Footer";
+import Despacho from "./pages/Despacho/Despacho";
 
-import { CartProvider } from "./components/Carrito/Carrito";
+
+
 
 
 function App() {
@@ -25,6 +28,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/compra" element={<Compra />} />
           <Route path="/admin" element={<Admin />} />
+          <Route path="/despacho" element={<Despacho />} />
         </Routes>
         <Footer />
       </Router>

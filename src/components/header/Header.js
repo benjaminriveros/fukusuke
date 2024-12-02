@@ -240,6 +240,10 @@ const Header = () => {
       const goToHome = () => {
         navigate("/"); // Navega a la página de inicio
       };
+
+      const goToMenu = () => {
+        navigate("/Menu"); // Navega a la página de inicio
+      };
       
       const handleConfirmPurchase = () => {
         confirmPurchase(); // Llama a la función sin parámetros
@@ -255,7 +259,7 @@ const Header = () => {
                 </div>
                 <div className="header-button">
                     <button className="menu-button" onClick={goToHome}>Inicio</button>
-                    <button className="menu-button">Menú</button>
+                    <button className="menu-button" onClick={goToMenu}>Menú</button>
                     <button className="menu-button" onClick={openCart}>
                         <span className="cart-count">({cartItems.length})</span>
                         <CiShoppingCart className="cart-icon" />
@@ -382,7 +386,7 @@ const Header = () => {
             )}
 
             {isCartOpen && (
-                    <div className="modal">
+                    <div className="Carrito">
                     <div className="modal-content">
                         <span className="close-button" onClick={closeCart}>
                         &times;
@@ -428,7 +432,7 @@ const Header = () => {
                                 <button onClick={confirmPurchase} className="confirm-button">
                                     Confirmar Carrito
                                 </button>
-                                <button onClick={() => confirmPurchase(navigate)} className="cancel-button">
+                                <button onClick={() => cancelPurchase()} className="cancel-button">
                                     Anular Carrito
                                 </button>
                             </div>

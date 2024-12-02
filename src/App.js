@@ -15,6 +15,7 @@ import Compra from './pages/Compra/Compra';
 import Admin from './pages/Admin/Admin';
 import Despacho from "./pages/Despacho/Despacho";
 import Dueno from "./pages/Dueno/Dueno";
+import Menu from "./pages/Menu/Menu";
 
 
 
@@ -30,11 +31,11 @@ function App() {
           <div className="main-content">
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/compra" element={<Compra />} />
               <Route path="/admin" element={<Admin />} />
               <Route path="/despacho" element={<Despacho />} />
               <Route path="/Dueno" element={<Dueno />} />
               <Route path="/compra" element={<Compra />} />
+              <Route path="/Menu" element={<Menu />} />
             </Routes>
           </div>
           <Footer />

@@ -56,13 +56,17 @@ const Header = () => {
             }
         }
     }, []);
-
+    
     const handleGenderChange = (e) => {
         setGender(e.target.value);
     };
-
     
     const navigate = useNavigate();
+    const handleConfirmPurchase = () => {
+        confirmPurchase();
+        closeCart();
+    };
+    
     const handleHomeClick = () => {
         navigate('/');
     };
@@ -342,7 +346,7 @@ const Header = () => {
                                  </h3>
                             </div>
                             <div className="cart-actions">
-                                <button onClick={confirmPurchase} className="confirm-button">
+                                <button onClick={handleConfirmPurchase} className="confirm-button">
                                     Confirmar compra
                                 </button>
                                 <button onClick={cancelPurchase} className="cancel-button">

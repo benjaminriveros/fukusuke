@@ -14,6 +14,7 @@ export const HomePage = () => {
   // Estado para el modal
   const [selectedPromo, setSelectedPromo] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { addToCart } = useContext(CartContext);
 
   const sushiMenu = [
     {
@@ -65,7 +66,10 @@ export const HomePage = () => {
       image: promo50,
     },
   ];
-  const { addToCart } = useContext(CartContext); // Acceso al contexto
+
+  const handleAddToCart = (item) => {
+    addToCart(item);
+  };
   const navigate = useNavigate();
 
   // Funciones para el modal
@@ -159,7 +163,7 @@ export const HomePage = () => {
                 <span className="old-price">${item.oldPrice.toLocaleString()}</span>{" "}
                 <span className="current-price">${item.price.toLocaleString()}</span>
               </p>
-              <button className="add-to-cart" onClick={() => addToCart(item)}>
+              <button className="add-to-cart" onClick={() => handleAddToCart(item)}>
                 Añadir al carrito
               </button>
             </div>

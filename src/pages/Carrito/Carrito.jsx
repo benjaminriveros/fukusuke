@@ -1,4 +1,5 @@
 import React, { createContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 // Crear el contexto
 export const CartContext = createContext();
@@ -6,6 +7,12 @@ export const CartContext = createContext();
 // Proveedor del contexto
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
+  
+  const navigate = useNavigate();
+
+  const handleNavigateCompra = () => {
+    navigate("/compra");
+  }
 
   const addToCart = (item) => {
     setCartItems((prevCart) => {const existingItem = prevCart.find((cartItem) => cartItem.name === item.name);
@@ -46,8 +53,9 @@ export const CartProvider = ({ children }) => {
 
   // Confirmar compra
   const confirmPurchase = () => {
-    setCartItems([]); // Vaciar carrito
-    window.location.href = "/compra"; // Navegar a /compra
+    console.log("Compra confirmada con los siguientes elementos: ", cartItems);
+    handleNavigateCompra();
+
   };
 
   // Anular compra

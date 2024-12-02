@@ -17,16 +17,16 @@ import { CartProvider } from "./pages/Carrito/Carrito";
 
 function App() {
   return (
-    <CartProvider>
-      <Router>
+    <Router>
+      <CartProvider>
         <Header />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/compra" element={<Compra />} />
           <Route path="/admin" element={<Admin />} />
         </Routes>
-      </Router>
-    </CartProvider>
+      </CartProvider>
+    </Router>
 
   );
 }

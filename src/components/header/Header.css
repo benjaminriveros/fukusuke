@@ -7,50 +7,72 @@
 
 .header {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    justify-content: space-between; /* Se asegura de que el logo+texto estén a la izquierda y los botones a la derecha */
+    align-items: center; /* Centra verticalmente todos los elementos */
     background-color: black;
     color: white;
-    text-align: center;
     font-size: 1.25rem; /* 20px */
     padding: 0.3125rem 1.25rem; /* 5px 20px */
-    height: 70px; /* Set a fixed height for the header */
+    height: 70px; /* Establece una altura fija para el header */
 }
 
-.header-left {
-    display: flex;
-    align-items: center;
+.logo-titulo {
+    display: flex; /* Alinea el logo y el título horizontalmente */
+    align-items: center; /* Centra verticalmente logo y título */
 }
 
 .header-logo {
-    width: 50px;
+    width: 50px; /* Ajusta el tamaño del logo */
     height: 50px;
-    margin-right: 10px;
+    margin-right: 10px; /* Espacio entre el logo y el título */
 }
 
-.header-title {
-    font-size: 24px;
-    font-weight: bold;
+.titulo {
+    color: white;
+    font-size: 30px; /* Ajusta el tamaño del texto */
+    margin: 0; /* Elimina márgenes innecesarios */
+    padding: 0; /* Elimina padding para evitar desplazamientos */
+}
+
+.titulo a {
+    color: rgb(255, 255, 255); /* Cambia a negro */
+    text-decoration: none; /* Elimina el subrayado */
+    font-size: 2rem; /* Ajusta el tamaño del texto */
+    font-family: 'Arial', sans-serif; /* Define la fuente */
 }
 
 .header-button {
     display: flex;
-    align-items: center;
+    gap: 10px; /* Espacio entre los botones */
+    align-items: center; /* Alinea los botones verticalmente */
 }
 
 .menu-button {
     background-color: transparent;
-    border: 1px solid white;
+    border: none;
     color: white;
-    padding: 5px 10px;
+    padding: 7px 15px;
     cursor: pointer;
-    font-size: 16px;
-}
-
-.menu-button:hover {
-    background-color: white;
-    color: black;
-}
+    font-size: 20px; /* El tamaño base de texto */
+    font-weight: 600;
+  }
+  
+  .menu-button:hover {
+    background-color: transparent;
+    text-decoration: underline;
+  }
+  
+  /* Estilos específicos para el número en el carrito */
+  .cart-count {
+    font-size: 15px; /* Tamaño del número en el carrito */
+    margin-right: 2px; /* Separación entre el número y el ícono */
+  }
+  
+  /* Estilos específicos para el ícono del carrito */
+  .cart-icon {
+    font-size: 30px; /* Tamaño del ícono */
+    vertical-align: middle; /* Alinea el ícono con el texto */
+  }
 
 /* Modal styles */
 .modal {

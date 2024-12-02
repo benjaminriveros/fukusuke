@@ -2,6 +2,7 @@ import React, {useContext, useState} from 'react';
 import './Header.css'; // Make sure to create a CSS file for styling
 import Fukusuke from '../../assets/fukusuke.png';
 import { CartContext } from "../../pages/Carrito/Carrito.jsx";
+import { CiShoppingCart } from "react-icons/ci";
 
 const Header = () => {
 
@@ -48,15 +49,18 @@ const Header = () => {
     return (
         <>
             <header className="header">
-                <div className="header-left">
-                    <img src ={Fukusuke} alt="Logo" className="header-logo" />
-                    <h1 className="header-title">Fukusuke</h1>
+                <div className="logo-titulo">
+                    <a href="#" className="logo"><img src={Fukusuke} alt="Logo" className="header-logo" /></a>
+                    <h1 className="titulo"><a href='#'>Fukusuke</a></h1>
                 </div>
                 <div className="header-button">
                     <button className="menu-button">Inicio</button>
-                    <button className="menu-button">Menu</button>
-                    <button className="menu-button" onClick={openCart}>🛒 Carrito ({cartItems.length})</button>
-                    <button className="menu-button" onClick={openLoginModal}>Registro/Login</button>
+                    <button className="menu-button">Menú</button>
+                    <button className="menu-button" onClick={openCart}>
+                        <span className="cart-count">({cartItems.length})</span>
+                        <CiShoppingCart className="cart-icon" />
+                    </button>
+                    <button className="menu-button" onClick={openLoginModal}>Iniciar sesión</button>
                 </div>
             </header>
 

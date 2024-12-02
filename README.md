@@ -14,3 +14,4 @@ Leer info.txt de bussinesLogic, components, pages, dataRepository
 
 
 Para ejercutar el fonten primero hay que instalar el npm escribiendo npm install y luego se solo escribiendo npm start para seguir viendo el front end 
+Tambien hay que installar npm install react-icons

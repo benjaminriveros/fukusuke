@@ -16,6 +16,7 @@ import Compra from './pages/Compra/Compra';
 import Admin from './pages/Admin/Admin';
 import Despacho from "./pages/Despacho/Despacho";
 import Dueno from "./pages/Dueno/Dueno";
+import Menu from "./pages/Menu/Menu";
 
 
 
@@ -25,6 +26,7 @@ import Dueno from "./pages/Dueno/Dueno";
 function App() {
   return (
     <Router>
+
       <AuthProvider>
         <CartProvider>
           <div id="root">
@@ -36,7 +38,6 @@ function App() {
                 <Route path="/admin" element={<Admin />} />
                 <Route path="/despacho" element={<Despacho />} />
                 <Route path="/Dueno" element={<Dueno />} />
-                <Route path="/compra" element={<Compra />} />
               </Routes>
             </div>
             <Footer />

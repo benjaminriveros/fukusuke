@@ -1,0 +1,75 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #121212;
+    color: white;
+  }
+  
+  .menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 20px;
+  }
+  
+  .menu-card {
+    background-color: #222;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  }
+  
+  .image-container {
+    position: relative;
+    height: 200px; /* Define la altura de la imagen */
+  }
+  
+  .image-container img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover; /* Hace que las imágenes se adapten al contenedor sin deformarse */
+  }
+  
+  .new-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: red;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+  }
+  
+  .menu-details {
+    padding: 15px;
+    text-align: center;
+  }
+  
+  .menu-details h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  
+  .old-price {
+    text-decoration: line-through;
+    color: gray;
+    font-size: 14px;
+  }
+  
+  .price {
+    color: #4caf50;
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+  .menu-actions {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 10px;
+  }
+  
+  .icon {
+    font-size: 24px;
+    cursor: pointer;
+  }
+  

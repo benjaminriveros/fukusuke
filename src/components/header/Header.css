@@ -75,7 +75,8 @@
   }
 
 /* Modal styles */
-.modal {
+.Carrito {
+    color : black;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -88,6 +89,8 @@
     overflow: auto;
     background-color: rgba(0, 0, 0, 0.5); /* Black with opacity */
 }
+
+
 
 .modal-content {
     background-color: white;

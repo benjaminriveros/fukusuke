@@ -4,7 +4,7 @@ import './Admin.css';
 export const Admin = () => {
   // Estados para productos
   const [products, setProducts] = useState([]);
-  const [productForm, setProductForm] = useState({ name: '', description: '', price: '', availability: '' });
+  const [productForm, setProductForm] = useState({ name: '', description: '', price: '', availability: '', image: '' });
   const [isEditing, setIsEditing] = useState(false);
   const [editProductId, setEditProductId] = useState(null);
   const [error, setError] = useState('');
@@ -58,7 +58,7 @@ export const Admin = () => {
       console.log(isEditing ? 'Producto actualizado:' : 'Producto creado:', result);
       alert(isEditing ? 'Producto actualizado exitosamente' : 'Producto creado exitosamente');
       fetchProducts();
-      setProductForm({ name: '', description: '', price: '', availability: '' });
+      setProductForm({ name: '', description: '', price: '', availability: '', image: '' });
       setIsEditing(false);
       setEditProductId(null);
     } catch (err) {
@@ -67,19 +67,20 @@ export const Admin = () => {
     }
   };
 
-  // Editar producto
+  // **Editar producto**
   const handleProductEdit = (product) => {
     setProductForm({
       name: product.name,
       description: product.description,
       price: product.price,
       availability: product.availability.toString(),
+      image: product.image || '',
     });
     setIsEditing(true);
     setEditProductId(product.id);
   };
 
-  // Eliminar producto
+  // **Eliminar producto**
   const handleProductDelete = async (id) => {
     if (window.confirm('¿Estás seguro de eliminar este producto?')) {
       try {
@@ -97,6 +98,16 @@ export const Admin = () => {
         console.error('Error al eliminar producto:', err);
         setError('No se pudo eliminar el producto. Intenta de nuevo.');
       }
+    }
+  };
+
+  // Validar si la URL es válida
+  const isValidUrl = (url) => {
+    try {
+      new URL(url);
+      return true;
+    } catch {
+      return false;
     }
   };
 
@@ -142,6 +153,28 @@ export const Admin = () => {
             <option value="1">Disponible</option>
             <option value="0">No disponible</option>
           </select>
+          <input
+            type="text"
+            name="image"
+            placeholder="URL de la imagen"
+            value={productForm.image}
+            onChange={handleProductChange}
+          />
+
+          {/* Previsualización de imagen */}
+          {productForm.image && isValidUrl(productForm.image) ? (
+            <div style={{ marginTop: '10px' }}>
+              <h4>Previsualización de la imagen:</h4>
+              <img
+                src={productForm.image}
+                alt="Previsualización"
+                style={{ width: '100px', height: '100px', objectFit: 'cover', border: '1px solid #ddd', borderRadius: '5px' }}
+              />
+            </div>
+          ) : productForm.image ? (
+            <p style={{ color: 'red' }}>URL de imagen no válida</p>
+          ) : null}
+
           <button type="submit">{isEditing ? 'Actualizar' : 'Crear'}</button>
         </form>
 
@@ -152,6 +185,7 @@ export const Admin = () => {
               <th>Descripción</th>
               <th>Precio</th>
               <th>Disponibilidad</th>
+              <th>Imagen</th>
               <th>Acciones</th>
             </tr>
           </thead>
@@ -164,6 +198,13 @@ export const Admin = () => {
                   <td>${product.price}</td>
                   <td>{product.availability ? 'Disponible' : 'No disponible'}</td>
                   <td>
+                    {product.image ? (
+                      <img src={product.image} alt={product.name} style={{ width: '50px', height: '50px' }} />
+                    ) : (
+                      'Sin imagen'
+                    )}
+                  </td>
+                  <td>
                     <button onClick={() => handleProductEdit(product)}>Editar</button>
                     <button onClick={() => handleProductDelete(product.id)}>Eliminar</button>
                   </td>
@@ -171,7 +212,7 @@ export const Admin = () => {
               ))
             ) : (
               <tr>
-                <td colSpan="5">No hay productos disponibles</td>
+                <td colSpan="6">No hay productos disponibles</td>
               </tr>
             )}
           </tbody>

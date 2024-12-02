@@ -2,7 +2,7 @@
 import React, {useContext, useState, useEffect} from 'react';
 import './Header.css'; // Make sure to create a CSS file for styling
 import Fukusuke from '../../assets/fukusuke.png';
-import { CartContext } from "../../pages/Carrito/Carrito.jsx";
+import { CartContext } from "../../components/Carrito/Carrito.js";
 import { validatePassword, validateRut, validatePhoneNumber } from '../../functions/LoginRules';
 import { CiShoppingCart } from "react-icons/ci";
 import { jwtDecode } from 'jwt-decode';

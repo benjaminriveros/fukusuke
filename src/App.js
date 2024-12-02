@@ -11,8 +11,9 @@ import Header from './components/header/Header';
 import Home from './pages/home/Home';
 import Compra from './pages/Compra/Compra';
 import Admin from './pages/Admin/Admin';
+import Footer from "./components/Footer/Footer";
 
-import { CartProvider } from "./pages/Carrito/Carrito";
+import { CartProvider } from "./components/Carrito/Carrito";
 
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
           <Route path="/compra" element={<Compra />} />
           <Route path="/admin" element={<Admin />} />
         </Routes>
+        <Footer />
       </Router>
     </CartProvider>
 

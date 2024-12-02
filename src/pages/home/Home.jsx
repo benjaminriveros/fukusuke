@@ -8,7 +8,7 @@ import Sabi from '../../assets/Sabi-Oriental.png';
 import promo30 from '../../assets/Promo-30.png';
 import promo50 from '../../assets/Promo-50-frito.png';
 import './Home.css';
-import { CartContext } from "../../pages/Carrito/Carrito.jsx";
+import { CartContext } from "../../components/Carrito/Carrito.js";
 
 export const HomePage = () => {
   // Estado para el modal

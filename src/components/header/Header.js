@@ -191,7 +191,7 @@ const Header = () => {
                         <span className="cart-count">({cartItems.length})</span>
                         <CiShoppingCart className="cart-icon" />
                     </button>
-                                    <div className="header-button">
+                    <div className="header-button">
                     {isAuthenticated ? (
                         <div>
                             <span>{username} </span>  
@@ -199,11 +199,12 @@ const Header = () => {
                                 Cerrar sesión
                             </button>
                         </div>
-                    ) : (
-                        <button className="menu-button" onClick={openLoginModal}>
-                            Registro/Login
-                        </button>
+                        ) : (
+                            <button className="menu-button" onClick={openLoginModal}>
+                                Iniciar sesión
+                            </button>
                     )}
+                    </div>
                 </div>
             </header>
 

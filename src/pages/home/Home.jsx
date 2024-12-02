@@ -177,18 +177,22 @@ export const HomePage = () => {
         <h2>Nuestra Carta</h2>
         {error && <p style={{ color: 'red' }}>{error}</p>}
         <div className="sushi-menu">
-          {menuItems.map((item) => (
-            <div key={item.id} className="sushi-item">
-              <img src={item.image} alt={item.name} className="sushi-image" />
-              <h3>{item.name}</h3>
-              <p>
-                <span className="current-price">${item.price.toLocaleString()}</span>
-              </p>
-              <button className="add-to-cart" onClick={() => addToCart(item)}>
-                Añadir al carrito
-              </button>
-            </div>
-          ))}
+          {menuItems
+            .filter((item) => item.availability) // Filtrar productos disponibles
+            .map((item) => (
+              <div key={item.id} className="sushi-item">
+                <img src={item.image} alt={item.name} className="sushi-image" />
+                <h3>{item.name}</h3>
+                <p>
+                  <span className="current-price">
+                    ${item.price.toLocaleString()}
+                  </span>
+                </p>
+                <button className="add-to-cart" onClick={() => addToCart(item)}>
+                  Añadir al carrito
+                </button>
+              </div>
+            ))}
         </div>
       </div>
     </>

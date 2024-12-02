@@ -6,6 +6,7 @@ import { CartContext } from "../../pages/Carrito/Carrito.jsx";
 import { validatePassword, validateRut, validatePhoneNumber } from '../../functions/LoginRules';
 import { CiShoppingCart } from "react-icons/ci";
 import { jwtDecode } from 'jwt-decode';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -58,6 +59,12 @@ const Header = () => {
 
     const handleGenderChange = (e) => {
         setGender(e.target.value);
+    };
+
+    
+    const navigate = useNavigate();
+    const handleHomeClick = () => {
+        navigate('/');
     };
 
     const openLoginModal = () => {
@@ -185,7 +192,7 @@ const Header = () => {
                     <h1 className="titulo"><a href='#'>Fukusuke</a></h1>
                 </div>
                 <div className="header-button">
-                    <button className="menu-button">Inicio</button>
+                    <button className="menu-button" onClick={handleHomeClick}>Inicio</button>
                     <button className="menu-button">Menú</button>
                     <button className="menu-button" onClick={openCart}>
                         <span className="cart-count">({cartItems.length})</span>

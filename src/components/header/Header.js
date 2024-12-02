@@ -23,14 +23,16 @@ async function enviarCodigo(correo) {
     // Esperamos la respuesta del servidor
     const result = await response.json();
 
-    if (response.ok) {
+    // Verifica si la respuesta contiene la propiedad 'codigo'
+    if (response.ok && result.codigo) {
       console.log('Código enviado:', result.codigo);  // Mostrar el código generado
-        return result.codigo
+      return result.codigo;  // Retorna el código recibido desde el backend
     } else {
-      console.error('Error al enviar el correo:', result.error);  // Mostrar el error si no se envió
+      console.error('La respuesta no contiene un código válido');
+      throw new Error('No se pudo obtener el código');
     }
   } catch (error) {
-    console.error('Error al realizar la solicitud:', error);  // Manejo de errores de la solicitud
+    console.error('Error al realizar la solicitud:', error);
   }
 }
 
@@ -109,30 +111,37 @@ const Header = () => {
     const [generatedCode, setGeneratedCode] = useState(null); // Este es el código que generará la función confirmarMail()
 
     // Función que abre la ventana emergente y genera el código
-    const handleSendConfirmationCode = () => {
-        // Aquí generamos el código (este paso debe invocar a tu función confirmarMail)
-        const code = enviarCodigo(email); // Suponiendo que esta función genera un código de verificación
-        setGeneratedCode(code); // Guardamos el código generado en el estado
-        setIsConfirmationModalOpen(true); // Abrimos la ventana emergente
+    const handleSendConfirmationCode = async () => {
+      // Esperamos a que se obtenga el código desde el backend
+      const code = await enviarCodigo(email); // Generar el código (ahora es asincrónico)
+
+      // Guardamos el código generado en el estado
+      setGeneratedCode(code); 
+
+      // Abrimos el modal de confirmación
+      setIsConfirmationModalOpen(true); 
     };
-    
+
+    const closeConfirmationModal = () => {
+      setIsConfirmationModalOpen(false); // Actualizamos el estado para cerrar el modal
+    };
+
     // Función para manejar la verificación del código
     const handleConfirmCode = () => {
-        if (confirmationCode === generatedCode) {
+      console.log('Código generado:', generatedCode);
+      console.log('Código ingresado:', confirmationCode);
+
+      // Verificamos si el código ingresado es el mismo que el generado
+      if (String(confirmationCode) === String(generatedCode)) {
         // Si el código es correcto, enviamos el formulario
         setIsConfirmationModalOpen(false);
         handleSubmit(); // Llamamos a la función de envío del formulario
-        } else {
+      } else {
         // Si el código es incorrecto, mostramos un error
         setIsInvalidCode(true);
-        }
+      }
     };
     
-    // Función para cerrar la ventana emergente
-    const closeConfirmationModal = () => {
-        setIsConfirmationModalOpen(false); // Cierra la ventana emergente
-        setIsInvalidCode(false); // Limpiar posibles errores
-    };
     const handleLoginSubmit = async (e) => {
         e.preventDefault();
       
@@ -168,75 +177,75 @@ const Header = () => {
         window.location.reload(); // Recargar la página
     };
     
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-      
-        let isValid = true;
-      
-        if (!validatePassword(password)) {
-          setPasswordError('Contraseña debe tener al menos 8 caracteres, una letra mayúscula, una letra minúscula y un número.');
-          isValid = false;
-        } else {
-          setPasswordError('');
-        }
-      
-        if (!validateRut(rut)) {
-          setRutError('RUT debe ser en formato 12345678-9.');
-          isValid = false;
-        } else {
-          setRutError('');
-        }
-      
-        if (!validatePhoneNumber(telefono)) {
-          setPhoneError('Número de teléfono debe ser de 9 dígitos.');
-          isValid = false;
-        } else {
-          setPhoneError('');
-        }
-      
-        setIsFormValid(isValid);
-      
-        if (isValid) {
-          const data = {
-            name: username,
-            email: email,
-            password: password,
-            role: 'cliente',
-          };
-      
-          console.log('Data to be sent:', data); // Verificar estructura de los datos
-      
-          try {
-            const response = await fetch('http://localhost:3000/api/users/register', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify(data),
-            });
-      
-            if (response.ok) {
-              console.log('Data submitted successfully');
-              window.location.reload(); // Refrescar la página
-            } else {
-              const errorData = await response.json();
-              console.error('Fallo al enviar datos:', errorData);
-            }
-          } catch (error) {
-            console.error('Error:', error);
+    const handleSubmit = async () => {
+      let isValid = true;
+    
+      // Realiza las validaciones sin depender de e.preventDefault()
+      if (!validatePassword(password)) {
+        setPasswordError('Contraseña debe tener al menos 8 caracteres, una letra mayúscula, una letra minúscula y un número.');
+        isValid = false;
+      } else {
+        setPasswordError('');
+      }
+    
+      if (!validateRut(rut)) {
+        setRutError('RUT debe ser en formato 12345678-9.');
+        isValid = false;
+      } else {
+        setRutError('');
+      }
+    
+      if (!validatePhoneNumber(telefono)) {
+        setPhoneError('Número de teléfono debe ser de 9 dígitos.');
+        isValid = false;
+      } else {
+        setPhoneError('');
+      }
+    
+      setIsFormValid(isValid);
+    
+      if (isValid) {
+        const data = {
+          name: username,
+          email: email,
+          password: password,
+          role: 'cliente',
+        };
+    
+        console.log('Data to be sent:', data); // Verificar estructura de los datos
+    
+        try {
+          const response = await fetch('http://localhost:3000/api/users/register', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+          });
+    
+          if (response.ok) {
+            console.log('Data submitted successfully');
+            window.location.reload(); // Refrescar la página
+          } else {
+            const errorData = await response.json();
+            console.error('Fallo al enviar datos:', errorData);
           }
-      
-          setRegisterSuccessMessage('Registro completo!');
-          closeRegisterModal();
-          openLoginModal();
-        } else {
-          console.log('Formulario inválido');
+        } catch (error) {
+          console.error('Error:', error);
         }
-      };
-      const navigate = useNavigate(); // Hook para navegar programáticamente
-      const goToHome = () => {
-        navigate("/"); // Navega a la página de inicio
-      };
+    
+        setRegisterSuccessMessage('Registro completo!');
+        closeRegisterModal();
+        openLoginModal();
+      } else {
+        console.log('Formulario inválido');
+      }
+    };
+    
+    const navigate = useNavigate(); // Hook para navegar programáticamente
+    const goToHome = () => {
+      navigate("/"); // Navega a la página de inicio
+    };
 
     return (
         <>
@@ -345,32 +354,37 @@ const Header = () => {
                                 ))}
                             </select>
                             {/*--------------------------------------------------------------------*/}
-                            <button type="button" onClick={handleSendConfirmationCode} className="register-button">Enviar Código de Confirmación</button>
-
-
+                            <button type="button" onClick={handleSendConfirmationCode} className="register-button">
+                              Enviar Código de Confirmación
+                            </button>
                             {!isFormValid && <p style={{ color: 'red' }}>Por favor complete todos los campos correctamente</p>}
-                        </form>
-                    </div>
-                </div>
+                          </form>
+                        </div>
+                      </div>
             )}
 
+            {/* Modal de confirmación */}
             {isConfirmationModalOpen && (
               <div className="modal">
                 <div className="modal-content">
-                    <span className="close-button" onClick={closeConfirmationModal()}>&times;</span>
-                    <h2>Ingrese el código enviado a su correo {email}</h2>
-                    <input
+                  <span className="close-button" onClick={closeConfirmationModal}>&times;</span>
+                  <h2>Ingrese el código enviado a su correo {email}</h2>
+
+                  {/* Campo de entrada para el código */}
+                  <input
                     type="text"
-                    id="confirmation-code"
-                    placeholder="Código de confirmación"
                     value={confirmationCode}
-                    onChange={(e) => setConfirmationCode(e.target.value)}
-                    required
-                    />
-                    <button onClick={handleConfirmCode}>Verificar Código</button>
-                    {isInvalidCode && <p style={{ color: 'red' }}>Código incorrecto, por favor intente nuevamente.</p>}
+                    onChange={(e) => setConfirmationCode(e.target.value)} // Actualizar el código ingresado
+                    placeholder="Código de confirmación"
+                  />
+                  
+                  {/* Botón para confirmar el código */}
+                  <button type="button" onClick={handleConfirmCode}>Confirmar Código</button>
+
+                  {/* Mensaje de error si el código es incorrecto */}
+                  {isInvalidCode && <p style={{ color: 'red' }}>El código es incorrecto, por favor intente nuevamente.</p>}
                 </div>
-            </div>
+              </div>
             )}
 
             {isCartOpen && (

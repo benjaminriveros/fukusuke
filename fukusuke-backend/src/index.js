@@ -36,11 +36,12 @@ app.post('/enviar-correo', async (req, res) => {
   const { correoDestino } = req.body;  // Obtener el correo desde el cuerpo de la solicitud
 
   try {
-    const result = await enviarCorreo(correoDestino);  // Llamar a la función de confirmarMail.js
-    res.json(result);  // Retornar el código generado y el mensaje
+    const codigo = await enviarCorreo(correoDestino);  // Llamar a la función de confirmarMail.js
+    res.json({ codigo: codigo });  // Retornar el código en un objeto JSON
   } catch (error) {
     res.status(500).json({ error: 'No se pudo enviar el correo' });  // Manejar el error
   }
+  
 });
 
 // Conectar con la base de datos

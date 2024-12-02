@@ -46,8 +46,8 @@ export const CartProvider = ({ children }) => {
 
   // Confirmar compra
   const confirmPurchase = () => {
-    alert("Compra confirmada");
     setCartItems([]); // Vaciar carrito
+    window.location.href = "/compra"; // Navegar a /compra
   };
 
   // Anular compra

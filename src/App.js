@@ -15,9 +15,8 @@ import Compra from './pages/Compra/Compra';
 import Admin from './pages/Admin/Admin';
 import Despacho from "./pages/Despacho/Despacho";
 import Dueno from "./pages/Dueno/Dueno";
-
-
-
+import ProtectedRoute from './components/protectedRoute/protectedRoute';
+import Unauthorized from './components/Unauthorized/Unauthorized';
 
 
 function App() {
@@ -30,9 +29,17 @@ function App() {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/compra" element={<Compra />} />
-              <Route path="/admin" element={<Admin />} />
+              <Route
+                path="/admin"
+                element={
+                  <ProtectedRoute requiredRole="administrador">
+                    <Admin />
+                  </ProtectedRoute>
+                }
+              />
               <Route path="/despacho" element={<Despacho />} />
               <Route path="/Dueno" element={<Dueno />} />
+              <Route path="/unauthorized" element={<Unauthorized />} />
             </Routes>
           </div>
           <Footer />

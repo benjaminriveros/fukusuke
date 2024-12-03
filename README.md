@@ -1,3 +1,10 @@
+Integrantres:
+Benjamín Gutierrez 202004621-2
+Sofía Parada 202004671-9
+Benjamín Riveros 202004547-k
+Hernán Fuentes 202073614-6
+Alonso Maureira 202073589-1
+
 Requiere tener instalado Node.js
 
 'npm install react-router-dom' esta librería permite manejar las rutas en el frontend.
